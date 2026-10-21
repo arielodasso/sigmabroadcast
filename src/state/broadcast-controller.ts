@@ -20,6 +20,14 @@ export interface BroadcastSnapshot {
   frame: SimulationFrame;
   engineStatus: string;
   speed: number;
+  /** Configured broadcast delay, in milliseconds. */
+  broadcastDelayMs: number;
+  /** Absolute simulated time elapsed since kickoff, in milliseconds. */
+  simElapsedMs: number;
+  /** Length of a single period, in milliseconds. */
+  periodDurationMs: number;
+  /** Length of the half-time interval, in milliseconds. */
+  halftimeDurationMs: number;
   events: readonly MatchEvent[];
   corrections: readonly CorrectionEvent[];
   insights: readonly MatchInsight[];
@@ -118,6 +126,21 @@ export class BroadcastController {
     return this.audience;
   }
 
+  /**
+   * Sets the broadcast delay used by the director.
+   *
+   * The delay is a broadcast configuration, not match state, so it survives a
+   * `reset()`.
+   */
+  setBroadcastDelayMs(delayMs: number): void {
+    this.director.setBroadcastDelayMs(delayMs);
+    this.director.replanPending(this.engine.getSimElapsedMs());
+  }
+
+  getBroadcastDelayMs(): number {
+    return this.director.getBroadcastDelayMs();
+  }
+
   setLocale(locale: Locale): void {
     this.locale = locale;
   }
@@ -145,6 +168,10 @@ export class BroadcastController {
       frame: this.engine.getFrame(),
       engineStatus: this.engine.getStatus(),
       speed: this.engine.getSpeed(),
+      broadcastDelayMs: this.director.getBroadcastDelayMs(),
+      simElapsedMs: this.engine.getSimElapsedMs(),
+      periodDurationMs: this.engine.scenario.periodDurationMs,
+      halftimeDurationMs: this.engine.scenario.halftimeDurationMs,
       events: this.engine.getEvents(),
       corrections: this.engine.getCorrections(),
       insights: this.truth.getInsights(),

@@ -119,7 +119,13 @@ function startOfPeriod(team: TeamConfig): Vector3 {
   return { x: 0, y: BALL_Y, z: 0 };
 }
 
-function generatePeriod(
+/**
+ * A correction never lands on the same instant as the goal it invalidates:
+ * the referee review takes a fixed amount of time.
+ */
+const CORRECTION_DELAY_MS = 30_000;
+
+function buildPeriodBeats(
   period: 1 | 2,
   random: () => number,
   periodEndMs: number,
@@ -292,6 +298,17 @@ function generatePeriod(
     if (pinned !== undefined) beat.atMs = pinned;
   }
 
+  // A correction is always scheduled a fixed time after the goal it
+  // invalidates. Deriving it from the referenced beat keeps the relationship
+  // stable no matter how many beats the generator produced.
+  const beatByKey = new Map(beats.map((beat) => [beat.key, beat]));
+  for (const beat of beats) {
+    if (!beat.relatedBeatKey) continue;
+    const target = beatByKey.get(beat.relatedBeatKey);
+    if (!target) continue;
+    beat.atMs = target.atMs + CORRECTION_DELAY_MS;
+  }
+
   beats.push({
     key: nextKey("period-end"),
     atMs: periodEndMs,
@@ -307,12 +324,119 @@ function generatePeriod(
 }
 
 function buildDemoScenario(): Scenario {
-  const random = mulberry32(20261020);
+  return buildScenario({ variant: "demo", seed: 20261020 });
+}
+
+/**
+ * Scenario variants.
+ *
+ * The `demo` variant is the deterministic demonstration scenario: a goal in
+ * the first half that is later disallowed, and a goal in the second half that
+ * stands. The remaining variants exist to exercise the pipeline against
+ * different shapes of match, which is how the invariant tests prove that the
+ * rules hold beyond the happy path.
+ */
+export type ScenarioVariantId =
+  | "demo"
+  | "no-correction"
+  | "double-correction"
+  | "high-score";
+
+export interface ScenarioOptions {
+  variant: ScenarioVariantId;
+  seed: number;
+}
+
+interface VariantDefinition {
+  id: ScenarioVariantId;
+  scenarioId: string;
+  matchId: string;
+  /** Whether the first-half goal is later disallowed. */
+  disallowFirstGoal: boolean;
+  /** Whether the second-half goal is later disallowed. */
+  disallowSecondGoal: boolean;
+  /** Whether the first-half goal exists at all. */
+  firstHalfGoal: boolean;
+  /** Whether the second-half goal exists at all. */
+  secondHalfGoal: boolean;
+  /** Extra goals scored in the first half, always valid. */
+  extraFirstHalfGoals: number;
+}
+
+const VARIANTS: Record<ScenarioVariantId, VariantDefinition> = {
+  demo: {
+    id: "demo",
+    scenarioId: "scenario-demo-v2",
+    matchId: "match-demo-0001",
+    disallowFirstGoal: true,
+    disallowSecondGoal: false,
+    firstHalfGoal: true,
+    secondHalfGoal: true,
+    extraFirstHalfGoals: 0,
+  },
+  "no-correction": {
+    id: "no-correction",
+    scenarioId: "scenario-no-correction-v1",
+    matchId: "match-nocorrection-0002",
+    disallowFirstGoal: false,
+    disallowSecondGoal: false,
+    firstHalfGoal: true,
+    secondHalfGoal: true,
+    extraFirstHalfGoals: 0,
+  },
+  "double-correction": {
+    id: "double-correction",
+    scenarioId: "scenario-double-correction-v1",
+    matchId: "match-doublecorrection-0003",
+    disallowFirstGoal: true,
+    disallowSecondGoal: true,
+    firstHalfGoal: true,
+    secondHalfGoal: true,
+    extraFirstHalfGoals: 0,
+  },
+  "high-score": {
+    id: "high-score",
+    scenarioId: "scenario-high-score-v1",
+    matchId: "match-highscore-0004",
+    disallowFirstGoal: false,
+    disallowSecondGoal: false,
+    firstHalfGoal: true,
+    secondHalfGoal: true,
+    extraFirstHalfGoals: 2,
+  },
+};
+
+/**
+ * Builds a scenario from a variant and a seed.
+ *
+ * The seed only drives the pseudo-random placement of the synthetic events,
+ * so two runs with the same seed always produce the same match.
+ */
+export function buildScenario(options: ScenarioOptions): Scenario {
+  const variant = VARIANTS[options.variant];
+  const random = mulberry32(options.seed);
 
   const firstHalf: PeriodStep[] = [
     { type: "kickoff", team: HOME },
-    { type: "possession", team: HOME, startX: -0.1, passes: 4, shot: true, onTarget: true, goal: true, goalKey: "p1-goal-1" },
-    { type: "goal_disallowed", team: HOME, reason: "offside", relatedGoalKey: "p1-goal-1" },
+    {
+      type: "possession",
+      team: HOME,
+      startX: -0.1,
+      passes: 4,
+      shot: true,
+      onTarget: true,
+      ...(variant.firstHalfGoal ? { goal: true, goalKey: "p1-goal-1" } : {}),
+    },
+  ];
+  if (variant.disallowFirstGoal) {
+    firstHalf.push({
+      type: "goal_disallowed",
+      team: HOME,
+      reason: "offside",
+      relatedGoalKey: "p1-goal-1",
+    });
+  }
+  firstHalf.push(
     { type: "kickoff", team: AWAY },
     { type: "possession", team: AWAY, startX: -0.2, passes: 3, shot: true, onTarget: false },
     { type: "possession", team: HOME, startX: -0.4, passes: 5, shot: false },
@@ -323,15 +447,45 @@ function buildDemoScenario(): Scenario {
     { type: "possession", team: AWAY, startX: 0.2, passes: 4, shot: false },
     { type: "possession", team: HOME, startX: -0.6, passes: 6, shot: true, onTarget: false },
     { type: "possession", team: AWAY, startX: 0.4, passes: 5, shot: false },
-    { type: "period_end", team: HOME },
-  ];
+  );
+  for (let extra = 0; extra < variant.extraFirstHalfGoals; extra += 1) {
+    firstHalf.push({
+      type: "possession",
+      team: extra % 2 === 0 ? AWAY : HOME,
+      startX: 0.2 + extra * 0.05,
+      passes: 4,
+      shot: true,
+      onTarget: true,
+      goal: true,
+      goalKey: `p1-extra-goal-${extra + 1}`,
+    });
+  }
+  firstHalf.push({ type: "period_end", team: HOME });
 
   const secondHalf: PeriodStep[] = [
     { type: "kickoff", team: AWAY },
     { type: "possession", team: AWAY, startX: 0.1, passes: 4, shot: true, onTarget: true },
     { type: "possession", team: HOME, startX: -0.3, passes: 5, shot: false },
     { type: "possession", team: AWAY, startX: 0.2, passes: 3, shot: false },
-    { type: "possession", team: HOME, startX: -0.4, passes: 6, shot: true, onTarget: true, goal: true },
+    {
+      type: "possession",
+      team: HOME,
+      startX: -0.4,
+      passes: 6,
+      shot: true,
+      onTarget: true,
+      ...(variant.secondHalfGoal ? { goal: true, goalKey: "p2-goal-1" } : {}),
+    },
+  ];
+  if (variant.disallowSecondGoal) {
+    secondHalf.push({
+      type: "goal_disallowed",
+      team: HOME,
+      reason: "offside",
+      relatedGoalKey: "p2-goal-1",
+    });
+  }
+  secondHalf.push(
     { type: "possession", team: AWAY, startX: 0.3, passes: 4, shot: false },
     { type: "possession", team: HOME, startX: -0.2, passes: 4, shot: true, onTarget: false },
     { type: "possession", team: AWAY, startX: 0.5, passes: 5, shot: true, onTarget: false },
@@ -339,34 +493,42 @@ function buildDemoScenario(): Scenario {
     { type: "possession", team: AWAY, startX: 0.2, passes: 4, shot: false },
     { type: "possession", team: HOME, startX: -0.3, passes: 6, shot: true, onTarget: true },
     { type: "period_end", team: AWAY },
-  ];
+  );
 
   const periodDurationMs = 45 * 60_000;
   const halftimeDurationMs = 120_000;
 
   // `absoluteTime` in the engine adds the period offset to every beat's `atMs`,
   // so second-half beats must be generated relative to the start of period 2.
-  const p1 = generatePeriod(1, random, periodDurationMs, firstHalf, new Map([
+  const p1 = buildPeriodBeats(1, random, periodDurationMs, firstHalf, new Map([
     ["p1-goal-1", 120_000],
-    ["p1-disallowed-10", 150_000],
   ]));
-  const p2 = generatePeriod(2, random, periodDurationMs, secondHalf);
+  const p2 = buildPeriodBeats(2, random, periodDurationMs, secondHalf);
 
-  // Ensure the referenced goal keeps its stable key.
-  const p1Goal = p1.find((beat) => beat.key === "p1-goal-1");
-  if (!p1Goal) {
+  if (variant.firstHalfGoal && !p1.some((beat) => beat.key === "p1-goal-1")) {
     throw new Error("scenario generator lost the reference goal beat");
   }
 
   return {
-    id: "scenario-demo-v2",
-    matchId: "match-demo-0001",
-    seed: 20261020,
+    id: variant.scenarioId,
+    matchId: variant.matchId,
+    seed: options.seed,
     periodDurationMs,
     halftimeDurationMs,
     beats: [...p1, ...p2],
   };
 }
+
+/** Every scenario variant, in a stable order. */
+export const SCENARIO_VARIANTS: readonly ScenarioVariantId[] = [
+  "demo",
+  "no-correction",
+  "double-correction",
+  "high-score",
+];
+
+/** Seeds used by the robustness suite, one per variant. */
+export const SCENARIO_SEEDS: readonly number[] = [20261020, 424242, 7, 99991];
 
 export const DEMO_SCENARIO: Scenario = buildDemoScenario();
 

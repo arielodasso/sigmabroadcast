@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { renderToString } from "react-dom/server";
+import { MemoryRouter } from "react-router-dom";
 import { App } from "../../src/app/App";
 
 function render(locale: "en" | "es"): string {
@@ -9,7 +10,11 @@ function render(locale: "en" | "es"): string {
     configurable: true,
   });
   try {
-    return renderToString(<App />);
+    return renderToString(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>,
+    );
   } finally {
     Object.defineProperty(globalThis, "navigator", {
       value: { language: previous },

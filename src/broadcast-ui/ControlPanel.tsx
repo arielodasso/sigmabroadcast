@@ -1,4 +1,5 @@
 import type { AudienceMode, MatchEvent } from "../contracts";
+import { downloadBroadcastExport } from "../export";
 import { hasKey, t, type Locale } from "../i18n";
 import { localizeInsight } from "../match-truth/insight-text";
 import type { BroadcastSnapshot } from "../state/broadcast-controller";
@@ -107,6 +108,23 @@ export function ControlPanel({ snapshot, locale, query = "" }: ControlPanelProps
       <header className="panel__header">
         <h2 className="panel__title">{t(locale, "panel.title")}</h2>
         <p className="panel__lede">{t(locale, "panel.lede")}</p>
+        <div className="panel__actions">
+          <button
+            className="btn btn--ghost"
+            type="button"
+            onClick={() => downloadBroadcastExport(snapshot)}
+          >
+            <span>{t(locale, "panel.exportJson")}</span>
+          </button>
+          <a
+            className="btn btn--ghost"
+            href="/output"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>{t(locale, "panel.outputSource")}</span>
+          </a>
+        </div>
       </header>
 
       <div className="panel__grid">
@@ -150,6 +168,14 @@ export function ControlPanel({ snapshot, locale, query = "" }: ControlPanelProps
             <li>
               {t(locale, "panel.period")}:{" "}
               <strong>P{snapshot.frame.match.period}</strong>
+            </li>
+            <li>
+              {t(locale, "panel.broadcastDelay")}:{" "}
+              <strong>
+                {snapshot.broadcastDelayMs === 0
+                  ? t(locale, "controls.delay.off")
+                  : `${Math.round(snapshot.broadcastDelayMs / 1000)}s`}
+              </strong>
             </li>
           </ul>
         </article>

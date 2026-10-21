@@ -10,15 +10,20 @@ import { applyCameraMode, trackBall, type CameraMode } from "./cameras";
 export interface SceneProps {
   engine: MatchEngine;
   cameraMode: CameraMode;
-  onAdvance?: (deltaWallMs: number) => void;
 }
 
-export function Scene({ engine, cameraMode, onAdvance }: SceneProps) {
+/**
+ * Pure renderer.
+ *
+ * The scene visualises the state the simulation engine already holds; it
+ * never advances the match itself. The match clock is owned by the application
+ * shell so that every route (broadcast view, control panel, transparent
+ * output) advances the very same match.
+ */
+export function Scene({ engine, cameraMode }: SceneProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const cameraModeRef = useRef<CameraMode>(cameraMode);
   cameraModeRef.current = cameraMode;
-  const advanceRef = useRef(onAdvance);
-  advanceRef.current = onAdvance;
 
   useEffect(() => {
     const container = containerRef.current;
@@ -75,9 +80,6 @@ export function Scene({ engine, cameraMode, onAdvance }: SceneProps) {
       animationId = requestAnimationFrame(loop);
       const deltaWallMs = Math.min(100, time - lastTime);
       lastTime = time;
-
-      if (advanceRef.current) advanceRef.current(deltaWallMs);
-      else engine.advanceBy(deltaWallMs);
 
       const snapshot = engine.getFrame();
       updatePlayers(visuals, snapshot.players, new Map());

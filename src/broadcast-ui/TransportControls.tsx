@@ -4,6 +4,9 @@ import { PauseIcon, PlayIcon, ReplayIcon } from "./Icons";
 
 export const SPEEDS = [1, 2, 4, 8] as const;
 
+/** Selectable broadcast delays, in milliseconds. */
+export const BROADCAST_DELAYS = [0, 10_000, 20_000, 45_000] as const;
+
 export interface TransportControlsProps {
   locale: Locale;
   playing: boolean;
@@ -11,11 +14,13 @@ export interface TransportControlsProps {
   speed: number;
   cameraMode: "broadcast" | "tactical";
   audience: AudienceMode;
+  broadcastDelayMs: number;
   onTogglePlay: () => void;
   onReset: () => void;
   onSpeedChange: (speed: number) => void;
   onCameraChange: (mode: "broadcast" | "tactical") => void;
   onAudienceChange: (audience: AudienceMode) => void;
+  onBroadcastDelayChange: (delayMs: number) => void;
 }
 
 export function TransportControls({
@@ -25,11 +30,13 @@ export function TransportControls({
   speed,
   cameraMode,
   audience,
+  broadcastDelayMs,
   onTogglePlay,
   onReset,
   onSpeedChange,
   onCameraChange,
   onAudienceChange,
+  onBroadcastDelayChange,
 }: TransportControlsProps) {
   return (
     <div className="transport" role="group" aria-label={t(locale, "controls.group")}>
@@ -66,6 +73,23 @@ export function TransportControls({
             onClick={() => onSpeedChange(value)}
           >
             {value}×
+          </button>
+        ))}
+      </div>
+
+      <div className="transport__group" aria-label={t(locale, "controls.delay")}>
+        <span className="transport__label">{t(locale, "controls.delay")}</span>
+        {BROADCAST_DELAYS.map((value) => (
+          <button
+            key={value}
+            type="button"
+            className={`chip ${broadcastDelayMs === value ? "is-active" : ""}`}
+            aria-pressed={broadcastDelayMs === value}
+            onClick={() => onBroadcastDelayChange(value)}
+          >
+            {value === 0
+              ? t(locale, "controls.delay.off")
+              : `${Math.round(value / 1000)}s`}
           </button>
         ))}
       </div>
