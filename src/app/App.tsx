@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import type { AudienceMode } from "../contracts";
 import { AuditStrip } from "../broadcast-ui/AuditStrip";
 import { ControlPanel } from "../broadcast-ui/ControlPanel";
@@ -15,23 +15,36 @@ import type { CameraMode } from "../renderer3d/cameras";
 import { Scene } from "../renderer3d/Scene";
 import { AWAY_TEAM, HOME_TEAM } from "../simulation/roster";
 import { BroadcastController, type BroadcastSnapshot } from "../state/broadcast-controller";
+import { createBroadcastSync, PUBLISH_INTERVAL_MS } from "../state/broadcast-sync-channel";
+import { BroadcastOutputPage } from "../pages/BroadcastOutputPage";
 import { CoordinatesPage } from "../pages/CoordinatesPage";
 import { HelpPage } from "../pages/HelpPage";
 import { SpecificationPage } from "../pages/SpecificationPage";
 
 const UI_REFRESH_MS = 200;
 
+/** Route that renders the bare, transparent broadcast graphics. */
+const OUTPUT_ROUTE = "/output";
+
 export function App() {
   const routerNavigate = useNavigate();
+  const location = useLocation();
   const controllerRef = useRef<BroadcastController | null>(null);
   if (!controllerRef.current) {
     controllerRef.current = new BroadcastController();
   }
   const controller = controllerRef.current;
 
+  const syncRef = useRef<ReturnType<typeof createBroadcastSync> | null>(null);
+  if (!syncRef.current) {
+    syncRef.current = createBroadcastSync();
+  }
+  const sync = syncRef.current;
+
   const [snapshot, setSnapshot] = useState<BroadcastSnapshot>(() =>
     controller.snapshot(),
   );
+  const [remoteSnapshot, setRemoteSnapshot] = useState<BroadcastSnapshot | null>(null);
   const [cameraMode, setCameraMode] = useState<CameraMode>("broadcast");
   const [playing, setPlaying] = useState(false);
   const [speed, setSpeed] = useState(1);
@@ -40,11 +53,70 @@ export function App() {
   const [view, setView] = useState<AppView>("broadcast");
   const [query, setQuery] = useState("");
 
-  const lastUiRefresh = useRef(0);
-
+  const isOutput = location.pathname === OUTPUT_ROUTE;
   useEffect(() => {
     document.documentElement.lang = locale;
   }, [locale]);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("is-broadcast-output", isOutput);
+    document.body.classList.toggle("is-broadcast-output", isOutput);
+    return () => {
+      document.documentElement.classList.remove("is-broadcast-output");
+      document.body.classList.remove("is-broadcast-output");
+    };
+  }, [isOutput]);
+
+  /**
+   * The match clock lives in the application shell, not in the 3D scene, so
+   * the control panel and the transparent output page show the same match as
+   * the broadcast view.
+   *
+   * The control room publishes its snapshot to the other tabs; the output tab
+   * renders that snapshot instead of its own simulation.
+   */
+  useEffect(() => {
+    let animationId = 0;
+    let lastTime = performance.now();
+    let lastPublish = 0;
+    let lastUi = 0;
+    const loop = (time: number) => {
+      animationId = requestAnimationFrame(loop);
+      const deltaWallMs = Math.min(100, time - lastTime);
+      lastTime = time;
+      controller.advanceBy(deltaWallMs);
+      if (time - lastPublish >= PUBLISH_INTERVAL_MS) {
+        lastPublish = time;
+        const current = controller.snapshot();
+        if (!isOutput) sync.publish(current);
+      }
+      if (time - lastUi >= UI_REFRESH_MS) {
+        lastUi = time;
+        setSnapshot(controller.snapshot());
+      }
+    };
+    animationId = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(animationId);
+  }, [controller, isOutput, sync]);
+
+  /**
+   * The output tab listens to the control room instead of directing its own
+   * match. Until the first message arrives it falls back to its own
+   * simulation, so a standalone output tab still works.
+   */
+  useEffect(() => {
+    if (!isOutput) return;
+    return sync.subscribe(setRemoteSnapshot);
+  }, [isOutput, sync]);
+
+  /**
+   * A standalone output tab (opened without a control room) still has to show
+   * a running match, so the local simulation starts itself.
+   */
+  useEffect(() => {
+    if (!isOutput) return;
+    controller.engine.play();
+  }, [controller, isOutput]);
 
   const togglePlay = () => {
     if (controller.engine.getStatus() === "playing") {
@@ -96,6 +168,11 @@ export function App() {
     setLocale(next);
   };
 
+  const changeBroadcastDelay = (delayMs: number) => {
+    controller.setBroadcastDelayMs(delayMs);
+    setSnapshot(controller.snapshot());
+  };
+
   const changeQuery = (value: string) => {
     setQuery(value);
     // A query only has a visible effect on the audit log, so the panel is
@@ -128,18 +205,17 @@ export function App() {
     });
   };
 
-  const onAdvance = useMemo(() => {
-    return (deltaWallMs: number) => {
-      controller.advanceBy(deltaWallMs);
-      const now = performance.now();
-      if (now - lastUiRefresh.current >= UI_REFRESH_MS) {
-        lastUiRefresh.current = now;
-        setSnapshot(controller.snapshot());
-      }
-    };
-  }, [controller]);
-
   const finished = snapshot.frame.match.status === "finished";
+
+  if (isOutput) {
+    return (
+      <BroadcastOutputPage
+        snapshot={remoteSnapshot ?? snapshot}
+        locale={locale}
+        audience={audience}
+      />
+    );
+  }
 
   return (
     <div className="app">
@@ -175,11 +251,7 @@ export function App() {
                   />
 
                   <section className="stage" id="broadcast-stage" aria-label={t(locale, "nav.broadcast")}>
-                    <Scene
-                      engine={controller.engine}
-                      cameraMode={cameraMode}
-                      onAdvance={onAdvance}
-                    />
+                    <Scene engine={controller.engine} cameraMode={cameraMode} />
                     <div className="stage__ui">
                       <Scorebug
                         match={snapshot.frame.match}
@@ -214,11 +286,13 @@ export function App() {
                     speed={speed}
                     cameraMode={cameraMode}
                     audience={audience}
+                    broadcastDelayMs={snapshot.broadcastDelayMs}
                     onTogglePlay={togglePlay}
                     onReset={resetMatch}
                     onSpeedChange={changeSpeed}
                     onCameraChange={setCameraMode}
                     onAudienceChange={changeAudience}
+                    onBroadcastDelayChange={changeBroadcastDelay}
                   />
 
                   <AuditStrip snapshot={snapshot} locale={locale} />
