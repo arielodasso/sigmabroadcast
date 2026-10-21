@@ -659,6 +659,31 @@ a {
   color: var(--muted-2-on-dark);
 }
 
+/* ── Broadcast output (transparent source) ───────────────────────────────── */
+
+/*
+ * The `/output` route is meant to be used as a broadcast compositor source.
+ * Both the root element and the body must be transparent, otherwise the
+ * browser paints an opaque canvas behind the graphics.
+ */
+html.is-broadcast-output,
+html.is-broadcast-output body {
+  background: transparent;
+  background-color: transparent;
+  min-height: 100%;
+}
+
+html.is-broadcast-output body {
+  overflow: hidden;
+}
+
+.output {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
 /* ── Transport controls ──────────────────────────────────────────────────── */
 
 .transport {
@@ -928,6 +953,13 @@ a {
   border-bottom: 1px solid var(--ink);
   padding-bottom: 16px;
   margin-bottom: 24px;
+}
+
+.panel__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
 }
 
 .panel__title {

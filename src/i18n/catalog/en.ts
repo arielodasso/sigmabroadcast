@@ -43,6 +43,8 @@ export const en: Record<string, string> = {
   "controls.replay": "Replay",
   "controls.reset": "Reset",
   "controls.speed": "Playback speed",
+  "controls.delay": "Broadcast delay",
+  "controls.delay.off": "Off",
   "controls.camera": "Camera",
   "controls.audience": "Audience",
   "controls.camera.broadcast": "Broadcast",
@@ -109,6 +111,9 @@ export const en: Record<string, string> = {
   "panel.version": "v",
   "panel.home": "Home",
   "panel.away": "Away",
+  "panel.exportJson": "Download JSON export",
+  "panel.outputSource": "Open transparent output",
+  "panel.broadcastDelay": "Broadcast delay",
 
   // ── Narrative recap ─────────────────────────────────────────────────────
   "recap.kicker": "Full time",
