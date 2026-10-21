@@ -107,6 +107,17 @@ export function SiteFooter({ locale, onNavigate }: SiteFooterProps) {
           </p>
         </article>
       </div>
+
+      <div className="footer__credit">
+        <a
+          className="footer__credit-link"
+          href="https://sigmatecnologiasarg.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Desarrollado por Sigma Tecnologías
+        </a>
+      </div>
     </footer>
   );
 }
