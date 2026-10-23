@@ -2,7 +2,7 @@ import type { AudienceMode } from "../contracts";
 import { t, type Locale } from "../i18n";
 import { PauseIcon, PlayIcon, ReplayIcon } from "./Icons";
 
-export const SPEEDS = [1, 2, 4, 8] as const;
+export const SPEEDS = [1, 2, 4, 8, 16, 32, 64, 128] as const;
 
 /** Selectable broadcast delays, in milliseconds. */
 export const BROADCAST_DELAYS = [0, 10_000, 20_000, 45_000] as const;

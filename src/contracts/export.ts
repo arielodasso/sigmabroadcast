@@ -1,6 +1,18 @@
 import { z } from "zod";
+import {
+  agentActionSchema,
+  agentModeSchema,
+  aiNarrativeSchema,
+  aiStatusSchema,
+  personalizationSchema,
+} from "./ai";
 import { matchEventStatusSchema, matchEventTypeSchema } from "./events";
-import { insightCategorySchema, insightStatusSchema } from "./insights";
+import {
+  aiInsightMetadataSchema,
+  audienceModeSchema,
+  insightCategorySchema,
+  insightStatusSchema,
+} from "./insights";
 import { matchStatusSchema, periodSchema, teamSchema } from "./match";
 import { overlaySlotSchema, overlayStatusSchema } from "./overlays";
 import { narrativeRecapSchema } from "./recap";
@@ -15,7 +27,7 @@ import { narrativeRecapSchema } from "./recap";
  * without re-deriving the clock.
  */
 
-export const BROADCAST_EXPORT_SCHEMA_VERSION = "1.0.0";
+export const BROADCAST_EXPORT_SCHEMA_VERSION = "1.1.0";
 
 /** A timecode such as `1H 08:42`, always paired with its raw value. */
 export const timecodeSchema = z.strictObject({
@@ -87,7 +99,33 @@ export const exportInsightSchema = z.strictObject({
   evidenceEventIds: z.array(z.string().min(1)).min(1),
   createdAt: timecodeSchema,
   validUntil: timecodeSchema.optional(),
+  ai: aiInsightMetadataSchema.optional(),
 });
+
+export const exportAgentDecisionSchema = z.strictObject({
+  id: z.string().min(1),
+  insightId: z.string().min(1),
+  action: agentActionSchema,
+  score: z.number().min(0).max(1),
+  confidence: z.number().min(0).max(1),
+  topFeature: z.string().min(1),
+  audience: audienceModeSchema,
+  reason: z.string().min(1),
+  evidenceEventIds: z.array(z.string().min(1)).min(1),
+  model: z.string().min(1),
+  mode: agentModeSchema,
+  applied: z.boolean(),
+  tools: z.array(z.string().min(1)),
+  at: timecodeSchema,
+});
+
+export const exportAiBundleSchema = z.strictObject({
+  status: aiStatusSchema,
+  decisions: z.array(exportAgentDecisionSchema),
+  narratives: z.array(aiNarrativeSchema),
+});
+
+export const exportPersonalizationSchema = personalizationSchema;
 
 export const exportOverlaySchema = z.strictObject({
   id: z.string().min(1),
@@ -174,9 +212,13 @@ export const broadcastExportSchema = z.strictObject({
   decisions: z.array(exportDecisionSchema),
   stats: exportStatsSchema,
   recap: narrativeRecapSchema.nullable(),
+  personalization: exportPersonalizationSchema,
+  ai: exportAiBundleSchema,
 });
 
 export type BroadcastExport = z.infer<typeof broadcastExportSchema>;
+export type ExportAgentDecision = z.infer<typeof exportAgentDecisionSchema>;
+export type ExportAiBundle = z.infer<typeof exportAiBundleSchema>;
 export type ExportEvent = z.infer<typeof exportEventSchema>;
 export type ExportInsight = z.infer<typeof exportInsightSchema>;
 export type ExportOverlay = z.infer<typeof exportOverlaySchema>;

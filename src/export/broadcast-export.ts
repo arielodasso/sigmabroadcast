@@ -2,6 +2,7 @@ import {
   BROADCAST_EXPORT_SCHEMA_VERSION,
   broadcastExportSchema,
   type BroadcastExport,
+  type ExportAgentDecision,
   type ExportCorrection,
   type ExportDecision,
   type ExportEvent,
@@ -97,6 +98,7 @@ export function buildBroadcastExport(snapshot: BroadcastSnapshot): BroadcastExpo
     ...(insight.validUntilMs !== undefined
       ? { validUntil: timecode(snapshot, insight.validUntilMs) }
       : {}),
+    ...(insight.ai ? { ai: insight.ai } : {}),
   }));
 
   const overlays: ExportOverlay[] = snapshot.overlays.map((overlay) => ({
@@ -125,6 +127,25 @@ export function buildBroadcastExport(snapshot: BroadcastSnapshot): BroadcastExpo
     reason: decision.reason,
     at: timecode(snapshot, decision.atMs),
   }));
+
+  const agentDecisions: ExportAgentDecision[] = snapshot.agentDecisions.map(
+    (decision) => ({
+      id: decision.id,
+      insightId: decision.insightId,
+      action: decision.action,
+      score: decision.score,
+      confidence: decision.confidence,
+      topFeature: decision.topFeature,
+      audience: decision.audience,
+      reason: decision.reason,
+      evidenceEventIds: [...decision.evidenceEventIds],
+      model: decision.model,
+      mode: decision.mode,
+      applied: decision.applied,
+      tools: [...decision.tools],
+      at: timecode(snapshot, decision.atMs),
+    }),
+  );
 
   const document: BroadcastExport = {
     schemaVersion: BROADCAST_EXPORT_SCHEMA_VERSION,
@@ -159,6 +180,15 @@ export function buildBroadcastExport(snapshot: BroadcastSnapshot): BroadcastExpo
       shotMetrics: snapshot.stats.shotMetrics.map((metric) => ({ ...metric })),
     },
     recap: snapshot.recap,
+    personalization: { ...snapshot.personalization },
+    ai: {
+      status: snapshot.aiStatus,
+      decisions: agentDecisions,
+      narratives: snapshot.aiNarratives.map((narrative) => ({
+        ...narrative,
+        evidenceEventIds: [...narrative.evidenceEventIds],
+      })),
+    },
   };
 
   const parsed = broadcastExportSchema.safeParse(document);

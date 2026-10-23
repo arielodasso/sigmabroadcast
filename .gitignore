@@ -7,3 +7,10 @@ coverage/
 .vite/
 test-results/
 playwright-report/
+api/dist/
+api/local.settings.json
+.env
+.env.local
+demo/*.mp4
+demo/*.webm
+demo/raw/

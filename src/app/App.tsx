@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import type { AudienceMode } from "../contracts";
+import type { AgentMode, AudienceMode, Personalization } from "../contracts";
 import { AuditStrip } from "../broadcast-ui/AuditStrip";
 import { ControlPanel } from "../broadcast-ui/ControlPanel";
 import { EditorialHero } from "../broadcast-ui/EditorialHero";
@@ -16,6 +16,11 @@ import { Scene } from "../renderer3d/Scene";
 import { AWAY_TEAM, HOME_TEAM } from "../simulation/roster";
 import { BroadcastController, type BroadcastSnapshot } from "../state/broadcast-controller";
 import { createBroadcastSync, PUBLISH_INTERVAL_MS } from "../state/broadcast-sync-channel";
+import {
+  trackEvent,
+  trackException,
+  trackPageView,
+} from "../telemetry";
 import { BroadcastOutputPage } from "../pages/BroadcastOutputPage";
 import { CoordinatesPage } from "../pages/CoordinatesPage";
 import { HelpPage } from "../pages/HelpPage";
@@ -52,11 +57,17 @@ export function App() {
   const [locale, setLocale] = useState<Locale>(controller.getLocale());
   const [view, setView] = useState<AppView>("broadcast");
   const [query, setQuery] = useState("");
+  const [explainingId, setExplainingId] = useState<string | null>(null);
+  const [recapBusy, setRecapBusy] = useState(false);
 
   const isOutput = location.pathname === OUTPUT_ROUTE;
   useEffect(() => {
     document.documentElement.lang = locale;
   }, [locale]);
+
+  useEffect(() => {
+    trackPageView(location.pathname);
+  }, [location.pathname]);
 
   useEffect(() => {
     document.documentElement.classList.toggle("is-broadcast-output", isOutput);
@@ -173,6 +184,43 @@ export function App() {
     setSnapshot(controller.snapshot());
   };
 
+  const changeAgentMode = (mode: AgentMode) => {
+    controller.setAgentMode(mode);
+    trackEvent("agent_mode", { mode });
+    setSnapshot(controller.snapshot());
+  };
+
+  const changePersonalization = (next: Personalization) => {
+    controller.setPersonalization(next);
+    setSnapshot(controller.snapshot());
+  };
+
+  const explainInsight = async (insightId: string) => {
+    setExplainingId(insightId);
+    try {
+      await controller.explainInsight(insightId);
+      trackEvent("ai_explain", { insightId });
+      setSnapshot(controller.snapshot());
+    } catch (error) {
+      trackException(error);
+    } finally {
+      setExplainingId(null);
+    }
+  };
+
+  const generateAiRecap = async () => {
+    setRecapBusy(true);
+    try {
+      await controller.generateAiRecap();
+      trackEvent("ai_recap");
+      setSnapshot(controller.snapshot());
+    } catch (error) {
+      trackException(error);
+    } finally {
+      setRecapBusy(false);
+    }
+  };
+
   const changeQuery = (value: string) => {
     setQuery(value);
     // A query only has a visible effect on the audit log, so the panel is
@@ -265,6 +313,7 @@ export function App() {
                         events={snapshot.events}
                         audience={snapshot.audience}
                         locale={locale}
+                        personalization={snapshot.personalization}
                       />
                     </div>
                     {!playing && !finished ? (
@@ -300,7 +349,17 @@ export function App() {
                   <MatchRecap recap={snapshot.recap} locale={locale} />
                 </>
               ) : (
-                <ControlPanel snapshot={snapshot} locale={locale} query={query} />
+                <ControlPanel
+                  snapshot={snapshot}
+                  locale={locale}
+                  query={query}
+                  explainingId={explainingId}
+                  recapBusy={recapBusy}
+                  onAgentModeChange={changeAgentMode}
+                  onPersonalizationChange={changePersonalization}
+                  onExplain={explainInsight}
+                  onAiRecap={generateAiRecap}
+                />
               )
             }
           />

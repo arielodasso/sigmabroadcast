@@ -1,10 +1,12 @@
 import { useSearchParams } from "react-router-dom";
-import type { AudienceMode } from "../contracts";
+import type { AudienceMode, Personalization } from "../contracts";
 import { OverlayLayer } from "../broadcast-ui/OverlayLayer";
 import { Scorebug } from "../broadcast-ui/Scorebug";
 import type { Locale } from "../i18n";
-import { AWAY_TEAM, HOME_TEAM } from "../simulation/roster";
+import { AWAY_TEAM, HOME_TEAM, createRoster } from "../simulation/roster";
 import type { BroadcastSnapshot } from "../state/broadcast-controller";
+
+const ROSTER = createRoster();
 
 export interface BroadcastOutputPageProps {
   snapshot: BroadcastSnapshot;
@@ -24,6 +26,7 @@ export interface BroadcastOutputPageProps {
  *
  * - `?audience=fan|analyst` selects which audience text the overlays use.
  * - `?locale=en|es` selects the language of the graphics.
+ * - `?team=<teamId>&player=<playerId>` follows a club or player.
  */
 export function BroadcastOutputPage({
   snapshot,
@@ -42,6 +45,22 @@ export function BroadcastOutputPage({
       ? requestedAudience
       : audience;
 
+  const requestedTeam = params.get("team") ?? snapshot.personalization.followedTeamId;
+  const requestedPlayer =
+    params.get("player") ?? snapshot.personalization.followedPlayerId;
+  const followedTeamId = [HOME_TEAM.id, AWAY_TEAM.id].includes(requestedTeam ?? "")
+    ? requestedTeam ?? undefined
+    : undefined;
+  const followedPlayerId = ROSTER.players.some(
+    (player) => player.id === requestedPlayer,
+  )
+    ? requestedPlayer ?? undefined
+    : undefined;
+  const outputPersonalization: Personalization = {
+    ...(followedTeamId ? { followedTeamId } : {}),
+    ...(followedPlayerId ? { followedPlayerId } : {}),
+  };
+
   return (
     <div className="output" data-output="transparent">
       <Scorebug
@@ -56,6 +75,7 @@ export function BroadcastOutputPage({
         events={snapshot.events}
         audience={outputAudience}
         locale={outputLocale}
+        personalization={outputPersonalization}
       />
     </div>
   );

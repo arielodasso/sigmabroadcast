@@ -52,7 +52,7 @@ describe("broadcast export document", () => {
 
     const parsed = broadcastExportSchema.safeParse(document);
     expect(parsed.success).toBe(true);
-    expect(document.schemaVersion).toBe("1.0.0");
+    expect(document.schemaVersion).toBe("1.1.0");
     expect(document.generator).toBe("sigma-broadcast");
   });
 

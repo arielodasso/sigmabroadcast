@@ -25,7 +25,7 @@ export interface SimulationFrame {
   carrierId: string | null;
 }
 
-const MAX_SPEED = 16;
+const MAX_SPEED = 128;
 const MIN_SPEED = 0.25;
 
 /**

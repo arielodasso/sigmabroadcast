@@ -1,152 +1,175 @@
 # Sigma Broadcast
 
-*A synthetic football match, intelligently broadcast.*
+**A synthetic football match, intelligently broadcast.**
 
-Sigma Broadcast turns synthetic football match events into a 3D broadcast experience with contextual, evidence-backed on-screen graphics. Built for the **Microsoft + Premier League — Inside the Game: Developer Hackathon**.
+Sigma Broadcast turns deterministic match events into a 3D broadcast with evidence-backed graphics, a bounded AI directing agent, club/player personalization and an auditable JSON trail. Built for the **Microsoft + Premier League — Inside the Game: Developer Hackathon**.
 
-## Status
+The demo runs locally with no keys, no network and no paid services. Azure OpenAI, GitHub Models, Azure Functions and Application Insights are optional integrations.
 
-**Phase 5 — Preparación del hackathon**
+## Why
 
-Implemented:
+Live graphics are fast but not always right, and they rarely explain themselves. Sigma Broadcast separates three concerns:
 
-- Repository and tooling (Vite + React + TypeScript strict + Vitest + Zod).
-- Shared data contracts (`src/contracts/`): Match, Team, Player, MatchEvent, CorrectionEvent, MatchInsight, BroadcastOverlay, NarrativeRecap — all runtime-validated with Zod.
-- Match Simulator: deterministic synthetic scenario with clock, pause, speed, reset and a goal-disallowed correction.
-- 3D Renderer (Three.js): pitch, players, ball, broadcast and tactical cameras.
-- MatchTruth: rule-based detectors, evidence-backed insights, validation/invalidation, derived statistics and advanced metrics (pass distance & difficulty, estimated shot speed).
-- BroadcastSync: priority, scheduling, conflict resolution, expiry, correction withdrawal and an auditable decision log.
-- Broadcast UI: editorial monochrome interface (Nike reference), scorebug, overlays, transport controls, intelligence strip, control panel and four-column footer.
-- Narrative Recap generated automatically at full time, localised in English and Spanish.
-- Lightweight i18n layer (`src/i18n/`) with English default, Spanish catalog, browser-language detection and runtime switching.
-- Documentation of coordinates, clocks and events: `docs/coordinates-clock-events.md`.
-- **Configurable broadcast delay** with expiry-aware scheduling and discard of stale information.
-- **Machine-readable JSON export** with timecodes for every event, insight, overlay and decision.
-- **Transparent output route** (`/output`) for OBS composition — bare graphics without editorial chrome, per-pestaña sync via BroadcastChannel.
-- **Scenario variants by seed** — deterministic replays across 4 variants (demo, double-correction, no-correction, custom) with reproducible seeds.
-- **Invariants test suite** — structural invariants verified across all scenario variants and seed matrices (149 tests total).
-- Cross-tab synchronization between control room and output page.
+1. **Truth** — rule detectors produce insights backed by exact event IDs.
+2. **Direction** — a deterministic director schedules graphics, resolves conflicts and withdraws anything invalidated by a correction.
+3. **AI** — an on-device model ranks insights and a bounded agent recommends `air`, `boost`, `hold` or `suppress`. AI never creates facts.
 
-## Requirements
+Every AI decision keeps its evidence, top feature, confidence, model and reasoning.
 
-- Node.js >= 20 (developed and verified on Node 22.19).
-- npm >= 10.
+## Features
 
-No paid APIs, API keys or external services are required. Everything runs locally.
+- Deterministic synthetic match: goals, pressure, recoveries, shots and a goal disallowed by VAR-style correction.
+- Three.js pitch, players, ball and broadcast/tactical cameras.
+- Evidence-backed insights with validity windows and correction withdrawal.
+- Configurable broadcast delay with expiry-aware scheduling.
+- **On-device AI** — two trained MLPs score priority and audience for every insight.
+- **Agentic direction** — advisory and autonomous modes, auditable decision log and action history.
+- **Personalization** — follow a club or player from the panel or via `/output?team=&player=`.
+- **Optional LLM narration** — grounded explanations and match recap via Azure OpenAI, GitHub Models or an Azure Functions proxy, with strict evidence validation and deterministic fallback.
+- **Microsoft/Azure** — Application Insights telemetry, Azure Functions API, Static Web Apps deployment, GitHub Models alternative.
+- Machine-readable JSON export with timecodes, AI decisions and narratives.
+- Transparent `/output` route for OBS, synchronized across tabs.
+- English and Spanish broadcast, fan and analyst modes.
+- Automated 1080p demo recording.
 
-## Install and run
+## Quick start
+
+Requirements: Node.js >= 20, npm >= 10.
 
 ```bash
 npm install
-npm run dev        # local dev server at http://localhost:5173
+npm run dev
 ```
+
+Open `http://localhost:5173`. Click **Play match**. The full AI pipeline runs on-device.
+
+Optional LLM configuration:
+
+```bash
+cp .env.example .env.local
+```
+
+Use the Azure Functions proxy for any public deployment. Direct browser keys are exposed in the bundle.
 
 ## Scripts
 
 | Command | Description |
 |---|---|
-| `npm run dev` | Start Vite dev server |
-| `npm run build` | Typecheck + production build to `dist/` |
+| `npm run dev` | Vite dev server |
+| `npm run build` | Typecheck + production build |
 | `npm run preview` | Serve the production build |
-| `npm run typecheck` | TypeScript typecheck (no emit) |
-| `npm test` | Run unit tests once (Vitest) |
-| `npm run test:watch` | Run tests in watch mode |
+| `npm run typecheck` | TypeScript typecheck |
+| `npm test` | Run the full Vitest suite |
+| `npm run test:watch` | Watch mode |
+| `npm run models:train` | Retrain the on-device models and rewrite `src/ai/model/weights.ts` |
+| `npm run demo:record` | Record `demo/sigma-broadcast-demo.mp4` with Playwright + ffmpeg |
 
-## Project layout
+For `demo:record`, install the browser once and make sure `ffmpeg` is on `PATH`:
 
+```bash
+npx playwright install chromium
+ffmpeg -version
 ```
-SPEC.md                          # Single source of truth for the product
-docs/
-  coordinates-clock-events.md    # 3D coordinate convention, clocks, event rules, metrics
+
+The recorder uses dynamic speed: fast-forward through quiet spells and slow down whenever an overlay is on screen. The current capture is a 1080p MP4 of about 70 seconds. Set `DEMO_HEADED=1` to watch the browser while recording.
+
+## AI layer
+
+```text
+events -> evidence insights -> 25 features -> MLP priority + audience
+       -> agent action -> optional grounded LLM -> overlays + audit export
+```
+
+- **Model**: 25 → 14 tanh → 1 sigmoid, trained offline by `scripts/train-models.mjs`, exported as TypeScript weights.
+- **Metrics** on the synthetic holdout: priority accuracy `0.784`, audience accuracy `0.998667`.
+- **Explanation**: ablation over normalized features; the top five contributions and `topFeature` are stored on the insight.
+- **Modes**: `advisory` keeps the deterministic director in control; `autonomous` applies a `60%` rule / `40%` model priority blend and can suppress weak or invalidated insights.
+- **Grounding**: LLM output must be JSON, cite only allowed evidence IDs and contain only numbers present in the evidence. Invented facts are rejected and the deterministic fallback is used.
+
+See [`docs/AI-ARCHITECTURE.md`](docs/AI-ARCHITECTURE.md).
+
+## Microsoft and Azure
+
+| Technology | Role |
+|---|---|
+| Azure Static Web Apps | Hosting and managed API |
+| Azure Functions (Node.js v4) | `POST /api/ai` proxy and `GET /api/health` |
+| Azure OpenAI | Optional grounded narration |
+| GitHub Models | Optional alternative LLM provider |
+| Application Insights | Product telemetry (no prompts or personal data) |
+| GitHub Actions | CI, SWA deployment and public GitHub Pages demo |
+| GitHub | Public repository and delivery |
+
+See [`docs/AZURE-DEPLOYMENT.md`](docs/AZURE-DEPLOYMENT.md).
+
+## Architecture
+
+```text
 src/
-  contracts/                     # Shared Zod schemas + inferred TypeScript types
-  i18n/                          # Locale detection, translation engine, en/es catalogs
-  simulation/                    # Deterministic engine, scenarios, roster
-  match-truth/                   # Detectors, insight engine, stats, advanced metrics, narrative recap
-  broadcast-sync/                # Director (priority, scheduling, conflicts) + corrections
-  renderer3d/                    # Three.js scene, pitch, players, ball, cameras
-  broadcast-ui/                  # TopNav, EditorialHero, Scorebug, overlays, strip, recap, panel, footer
-  state/                         # BroadcastController (snapshot, locale, recap, reset)
-  app/                           # App shell + design tokens
-  main.tsx
-tests/
-  contracts/                     # Contract validation tests
-  simulation/                    # Engine determinism and clock tests
-  match-truth/                   # Insights, metrics and narrative recap tests
-  broadcast-sync/                # Scheduling and conflict tests
-  i18n/                          # Translation engine and catalog parity tests
-  ui/                            # Application shell smoke tests
-  integration/                   # End-to-end demo scenario and invariants
-  export/                        # JSON export schema and serialization
-  state/                         # Broadcast sync channel tests
+  contracts/          Zod schemas and shared types
+  simulation/         Deterministic engine, roster, scenario variants
+  match-truth/        Detectors, evidence, stats, advanced metrics, recap
+  broadcast-sync/     Director, scheduling, conflicts, corrections
+  ai/                 Features, models, agent, narrator, providers
+  renderer3d/         Three.js scene and cameras
+  broadcast-ui/       Scorebug, overlays, control panel, audit strip, recap
+  state/              BroadcastController and cross-tab sync
+  export/             Machine-readable broadcast export
+  i18n/               English/Spanish catalogs and translation engine
+  app/                Application shell and design tokens
+  telemetry.ts        Optional Application Insights wrapper
+api/                  Azure Functions proxy and health endpoint
+tests/                Contracts, simulation, truth, sync, AI, UI, export, invariants
+docs/                 AI, demo, data, deployment and evaluation documentation
 ```
 
-## Principles (summary of SPEC.md §3)
+## Demo
 
-Synthetic-only · Deterministic (fixed seed) · Single source of truth · Evidence-based insights · Deterministic authority · AI optional · Local-first · Graceful degradation · Traceability · No fabricated capabilities.
+- `/` — editorial control room.
+- `/output` — transparent OBS source. Query parameters: `audience=fan|analyst`, `locale=en|es`, `team=<id>`, `player=<id>`.
+- `npm run demo:record` — records a dynamic-speed 1080p demo (about 70 seconds) and writes `demo/sigma-broadcast-demo.mp4`.
+- [`docs/DEMO-SCRIPT.md`](docs/DEMO-SCRIPT.md) — shot list and voiceover.
+
+Deployment workflows are included. Add `AZURE_STATIC_WEB_APPS_API_TOKEN` for Azure Static Web Apps, or enable GitHub Pages to publish the static demo. Without LLM credentials the public demo runs fully on-device.
+
+## Data
+
+All clubs, players, events, statistics and training labels are synthetic. No real match feed, Premier League asset, player data or personal data is used. See [`docs/SYNTHETIC-DATA.md`](docs/SYNTHETIC-DATA.md).
+
+## Testing
+
+```bash
+npm run typecheck
+npm test
+npm run build
+```
+
+The suite covers contracts, determinism, clock and simulation, detector evidence, correction invariants, scheduling, conflict resolution, cross-tab sync, AI agent actions, grounding validation, export schema and UI smoke paths. Current: **157 tests across 18 files**.
+
+The integration invariants run across scenario variants and seed matrices and assert that no live overlay depends on an invalidated insight, the final score equals non-disallowed goals, and every export validates.
+
+## Documentation
+
+- [`SPEC.md`](SPEC.md) — product specification and implemented extensions.
+- [`docs/AI-ARCHITECTURE.md`](docs/AI-ARCHITECTURE.md) — models, features, agent, grounding, providers.
+- [`docs/EVALUATION-CHECKLIST.md`](docs/EVALUATION-CHECKLIST.md) — requirement-to-artifact mapping.
+- [`docs/DEMO-SCRIPT.md`](docs/DEMO-SCRIPT.md) — 90-second demo.
+- [`docs/AZURE-DEPLOYMENT.md`](docs/AZURE-DEPLOYMENT.md) — SWA, Functions, App Insights, troubleshooting.
+- [`docs/SYNTHETIC-DATA.md`](docs/SYNTHETIC-DATA.md) — data provenance and real-feed path.
+- [`docs/coordinates-clock-events.md`](docs/coordinates-clock-events.md) — 3D coordinates, clocks, event rules.
+
+## Principles
+
+Synthetic-only · Deterministic · Evidence-based · Deterministic authority · AI optional and bounded · Local-first · Graceful degradation · Traceability · No fabricated capabilities.
+
+## Limitations
+
+- No live data connector; the simulator is intentional.
+- No mobile companion.
+- No authentication or multi-user operation.
+- LLM quality depends on the configured provider; the on-device path is the demo baseline.
+- Azure deployment requires operator credentials and is not performed by this repository.
 
 ## License
 
-MIT. Dependency licenses: React (MIT), Vite (MIT), TypeScript (Apache-2.0), Vitest (MIT), Zod (MIT).
-
-## CI / GitHub Actions
-
-This project uses GitHub Actions for continuous integration. The workflow runs on every push to `main`:
-
-- **Typecheck** — `tsc --noEmit`
-- **Build** — `vite build`
-- **Tests** — `vitest run` (149 tests across 17 files)
-
-The workflow does not deploy to any external service; it verifies that the local build is sound and all tests pass, in keeping with the project's local-first principles.
-
-## Broadcast delay
-
-The system supports a configurable broadcast delay (in milliseconds) that holds every graphic for the configured duration after the insight that justifies it was created. While a graphic waits, a correction can still invalidate it, and information that expires before it would reach air is discarded instead of being shown late.
-
-- Default delay: 0 ms (no delay)
-- Maximum supported delay: 60_000 ms (1 minute)
-- Delay is clamped to `[0, 60000]` and rounded to the nearest integer
-- Delay is persisted across `reset()` calls
-- Expired or invalidated insights are discarded before reaching air
-
-## JSON export
-
-The system can serialize a complete broadcast snapshot to machine-readable JSON with timecodes, suitable for consumption by OBS or other broadcast tools.
-
-- `buildBroadcastExport(snapshot)` — returns a validated `BroadcastExport` object
-- `serializeBroadcastExport(snapshot)` — returns pretty-printed JSON string
-- Export includes: schema version, generator, timestamp, match data, events, corrections, insights, overlays, decisions, stats, and narrative recap
-- All timed artifacts carry both absolute and match clocks plus broadcast timecodes (e.g. `1H 08:42`)
-
-## Transparent output (`/output`)
-
-The `/output` route renders bare broadcast graphics on a transparent canvas, without editorial chrome, for use as an OBS (or any broadcast compositor) browser source.
-
-- Renders only `Scorebug` and `OverlayLayer` — no header, no footer, no control panel
-- `data-output="transparent"` HTML attribute on the root `div`
-- Query parameters `?audience=fan|analyst` and `?locale=en|es` select audience mode and language
-- Cross-tab sync via `BroadcastChannel` channel `"sigma-broadcast"` — the output tab shows the same match the operator is directing
-- The main route (`/`) retains the full editorial interface
-
-## Scenario variants by seed
-
-The simulator supports 4 deterministic scenarios, each reproducible with a fixed seed:
-
-| Variant | Seed | Description |
-|---|---|---|
-| `demo` | 19950320 | Default demonstration: goals, correction, invariant test |
-| `double-correction` | 19950321 | Two corrections applied, tests invariant handling |
-| `no-correction` | 19950322 | No corrections, all goals count |
-| `custom` | configurable | Custom seed for arbitrary sequences |
-
-All variants pass the invariants test suite, which verifies:
-- No active overlay depends on an invalidated insight
-- Overlays ended as `withdrawn` or `expired` are properly tracked
-- Final score equals goals that were never disallowed
-- Valid JSON export for every variant
-- Exactly one goal disallowed in `demo` and `double-correction`, zero in `no-correction`
-- Deterministic results for the same variant and seed
-
-## Cross-tab synchronization
-
-The output page can be opened in a separate browser tab to serve as an OBS source. `BroadcastChannel` synchronizes the snapshot between the control room tab and the output tab. If `BroadcastChannel` is not available (e.g., cross-origin), synchronization degrades gracefully to a no-op, and the output page runs its own local simulation.
+MIT. Dependency licenses: React (MIT), Vite (MIT), TypeScript (Apache-2.0), Vitest (MIT), Zod (MIT), Three.js (MIT), Playwright (Apache-2.0), Application Insights (MIT).

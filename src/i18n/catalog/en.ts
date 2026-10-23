@@ -225,4 +225,59 @@ export const en: Record<string, string> = {
   "insight.firstgoal.analyst":
     "Opening goal of the match, scored by {team}.",
   "insight.firstgoal.fan": "The first goal is in! {team} lead!",
+
+  "ai.title": "Broadcast AI",
+  "ai.subtitle":
+    "An on-device model scores every insight and a bounded agent decides what deserves airtime.",
+  "ai.mode": "Agent mode",
+  "ai.mode.advisory": "Advisory",
+  "ai.mode.autonomous": "Autonomous",
+  "ai.mode.advisoryHint":
+    "The agent recommends actions; the deterministic director keeps control.",
+  "ai.mode.autonomousHint":
+    "The agent applies its priority and can suppress weak or invalidated insights.",
+  "ai.provider": "Provider",
+  "ai.provider.local": "On-device MLP",
+  "ai.provider.proxy": "Azure proxy",
+  "ai.provider.azure-openai": "Azure OpenAI",
+  "ai.provider.github-models": "GitHub Models",
+  "ai.provider.deterministic-fallback": "Deterministic fallback",
+  "ai.status": "Status",
+  "ai.status.ready": "Ready",
+  "ai.status.fallback": "Fallback",
+  "ai.status.disabled": "Disabled",
+  "ai.status.error": "Error",
+  "ai.model": "Model",
+  "ai.confidence": "Confidence",
+  "ai.score": "AI score",
+  "ai.topSignal": "Top signal",
+  "ai.decision": "Decision",
+  "ai.action.air": "Air",
+  "ai.action.boost": "Boost",
+  "ai.action.hold": "Hold",
+  "ai.action.suppress": "Suppress",
+  "ai.decisions": "Agent decisions",
+  "ai.noDecisions": "No agent decisions yet.",
+  "ai.explain": "Explain with AI",
+  "ai.recap": "AI recap",
+  "ai.fallback": "Deterministic fallback",
+  "ai.llm": "LLM",
+  "ai.llm.configured": "Configured",
+  "ai.llm.notConfigured": "On-device only",
+  "ai.personalization": "Personalization",
+  "ai.followTeam": "Follow a club",
+  "ai.followPlayer": "Follow a player",
+  "ai.followNone": "No preference",
+  "ai.followHint":
+    "Followed clubs and players are boosted by the on-device model using evidence only.",
+  "ai.evidence": "{count} evidence events",
+  "ai.latency": "{ms} ms",
+  "ai.explainModel":
+    "On-device model scores this insight {score} with {confidence} confidence, led by {feature} across {evidence} evidence events. {explanation}",
+  "ai.prompt.system":
+    "You are Sigma Broadcast's match analyst. Describe only facts contained in the supplied evidence. Never invent players, teams, scores, minutes, statistics, or event IDs. Reply with strict JSON and nothing else: an object with a text string and an evidenceEventIds array. The text must be one or two sentences in the requested language, and every number must appear in the evidence. Use only IDs from allowedEventIds.",
+  "ai.prompt.explain":
+    "Language: {locale}. Explain one broadcast insight. Insight: {insight}. Evidence: {evidence}. Allowed event IDs: {allowedEventIds}. Return the JSON object now.",
+  "ai.prompt.recap":
+    "Language: {locale}. Summarize the finished match for a broadcast audience. Match: {match}. Stats: {stats}. Structured recap: {recap}. Evidence: {evidence}. Allowed event IDs: {allowedEventIds}. Return the JSON object now.",
 };

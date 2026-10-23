@@ -22,6 +22,23 @@ export const audienceTextSchema = z.strictObject({
   fan: z.string().optional(),
 });
 
+export const aiContributionSchema = z.strictObject({
+  feature: z.string().min(1),
+  value: z.number(),
+  impact: z.number(),
+});
+
+export const aiInsightMetadataSchema = z.strictObject({
+  score: z.number().min(0).max(1),
+  confidence: z.number().min(0).max(1),
+  priority: prioritySchema,
+  audience: audienceModeSchema,
+  model: z.string().min(1),
+  rationale: z.string().min(1),
+  topFeature: z.string().min(1),
+  contributions: z.array(aiContributionSchema).max(8),
+});
+
 export const matchInsightSchema = z.strictObject({
   id: z.string().min(1),
   matchId: z.string().min(1),
@@ -34,8 +51,11 @@ export const matchInsightSchema = z.strictObject({
   validUntilMs: z.number().min(0).optional(),
   status: insightStatusSchema,
   audienceText: audienceTextSchema,
+  ai: aiInsightMetadataSchema.optional(),
 });
 
+export type AiContribution = z.infer<typeof aiContributionSchema>;
+export type AiInsightMetadata = z.infer<typeof aiInsightMetadataSchema>;
 export type InsightCategory = z.infer<typeof insightCategorySchema>;
 export type AudienceMode = z.infer<typeof audienceModeSchema>;
 export type InsightStatus = z.infer<typeof insightStatusSchema>;

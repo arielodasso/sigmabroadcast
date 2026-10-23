@@ -723,4 +723,59 @@ Al alcanzar el estado `finished`, el sistema genera un resumen narrativo del par
 
 ---
 
+## 18. Capa de IA y diseño agéntico
+
+La IA es una capa **opcional y degradable** sobre el pipeline determinista. Nunca es la fuente de verdad: toda decisión conserva evidencia, modelo y motivo.
+
+### 18.1 Modelo local de prioridad y audiencia
+
+- Dos perceptrones multicapa entrenados offline con `scripts/train-models.mjs` y exportados como pesos TypeScript en `src/ai/model/weights.ts` (sin dependencias de runtime).
+- 25 features derivadas de reglas, evidencia, categoría, ventana de validez, contexto del partido y personalización.
+- El modelo de prioridad produce un `score` (0..1) y el de audiencia elige `fan` o `analyst`; la confianza se deriva de la distancia a 0.5.
+- La explicación se calcula por ablación: se anula cada feature normalizada y se mide el cambio en la salida. Las contribuciones quedan en `MatchInsight.ai.contributions`.
+- Entrenamiento reproducible por semilla; pesos versionados y auditables.
+
+### 18.2 Agente de dirección
+
+- `BroadcastAgent` (`src/ai/agent.ts`) observa cada insight nuevo y emite una decisión: `air`, `boost`, `hold` o `suppress`.
+- Herramientas declaradas en cada decisión: contexto del partido, evidencia, puntuación, selección de audiencia, relevancia de seguimiento y ventana de validez.
+- Modos:
+  - `advisory` (por defecto): el director determinista mantiene el control; la IA solo recomienda y anota.
+  - `autonomous`: la prioridad combinada (`60%` regla + `40%` modelo) se aplica al director y los insights débiles o invalidados pueden suprimirse.
+- Cada decisión incluye `score`, `confidence`, `topFeature`, evidencia, modelo, modo, herramientas usadas y si se aplicó. El historial se exporta en JSON.
+
+### 18.3 Personalización
+
+- El operador puede seguir un club o un jugador; también se puede fijar por URL en `/output?team=<teamId>&player=<playerId>`.
+- La personalización solo modifica features y resaltado visual: los insights que involucran al club/jugador seguido reciben `boost` y borde dorado en el overlay.
+- No se usan datos reales de usuarios ni perfiles; la preferencia es explícita y local.
+
+### 18.4 LLM opcional y grounding
+
+- Proveedores: Azure OpenAI, GitHub Models o proxy de Azure Functions (`api/`).
+- La explicación y el recap por LLM se solicitan bajo demanda; si no hay proveedor o la validación falla, se usa el fallback on-device/determinista.
+- Validación estricta: el texto debe citar solo IDs de evidencia permitidos y todo número debe existir en la evidencia o estadísticas. Una respuesta inventada se descarta.
+- Los prompts piden JSON estricto y prohíben inventar jugadores, equipos, marcadores, minutos o estadísticas.
+
+## 19. Tecnologías Microsoft y Azure
+
+- **Azure Static Web Apps**: hosting del frontend y de las Azure Functions administradas (`staticwebapp.config.json`, `.github/workflows/azure-static-web-apps.yml`).
+- **Azure Functions (Node.js v4)**: proxy `POST /api/ai` y `GET /api/health`; las claves viven solo en configuración del servidor.
+- **Azure OpenAI**: proveedor LLM principal cuando está configurado.
+- **GitHub Models**: alternativa para demos sin suscripción de Azure.
+- **Application Insights**: telemetría de producto vía `@microsoft/applicationinsights-web` (eventos de modo agente, explicación, recap y export), sin enviar prompts ni datos personales.
+- **GitHub Actions**: CI, deploy a Azure Static Web Apps y demo pública en GitHub Pages.
+- **GitHub**: repositorio público, control de versiones y entrega.
+
+## 20. Criterios de aceptación de la capa IA
+
+- La aplicación funciona sin credenciales y sin red: el modelo local y el fallback determinista cubren toda la demo.
+- Todo insight creado recibe metadata IA y una decisión de agente cuando la IA está activa.
+- En modo `advisory` la planificación determinista no cambia; en `autonomous` la prioridad aplicada coincide con la recomendada.
+- Las decisiones y narrativas se exportan con timecodes y evidencia.
+- Una respuesta LLM con IDs o números no respaldados se rechaza y se registra el fallback.
+- El build, el typecheck y la suite de pruebas pasan sin variables de entorno.
+
+---
+
 *Fin de la especificación inicial.*

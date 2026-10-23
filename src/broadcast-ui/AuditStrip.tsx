@@ -42,6 +42,12 @@ export function AuditStrip({ snapshot, locale }: AuditStripProps) {
       label: t(locale, "strip.corrections"),
       value: String(snapshot.corrections.length),
     },
+    {
+      id: "ai",
+      icon: <LayersIcon size={16} />,
+      label: t(locale, "ai.title"),
+      value: `${snapshot.agentDecisions.length} · ${t(locale, `ai.mode.${snapshot.aiStatus.mode}`)}`,
+    },
   ];
 
   return (
