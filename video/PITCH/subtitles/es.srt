@@ -1,0 +1,95 @@
+1
+00:00:00,720 --> 00:00:02,709
+Las gráficas en vivo son rápidas.
+
+2
+00:00:02,779 --> 00:00:07,483
+Pero no siempre son correctas, casi nunca se explican y no se adaptan a quien está mirando.
+
+3
+00:00:07,963 --> 00:00:12,707
+Sigma Broadcast convierte un partido sintético en una transmisión 3D, solo con datos sintéticos.
+
+4
+00:00:12,777 --> 00:00:15,766
+Cada gráfico nace de evidencia y cada decisión queda registrada.
+
+5
+00:00:15,836 --> 00:00:19,150
+La diferencia es la separación: verdad, dirección e IA acotada.
+
+6
+00:00:19,630 --> 00:00:21,529
+MatchTruth es la fuente de verdad.
+
+7
+00:00:21,599 --> 00:00:24,848
+Detectores deterministas atan cada insight a IDs de eventos exactos.
+
+8
+00:00:24,918 --> 00:00:28,592
+Cuando llega una corrección, todo lo que depende de datos inválidos se retira.
+
+9
+00:00:29,072 --> 00:00:30,876
+BroadcastSync es el director.
+
+10
+00:00:30,946 --> 00:00:36,105
+Prioriza, programa, expira y resuelve conflictos, incluido el retardo de transmisión.
+
+11
+00:00:36,175 --> 00:00:37,864
+Nada vencido llega al aire.
+
+12
+00:00:38,344 --> 00:00:42,068
+BroadcastAgent es un único agente acotado, apoyado en dos modelos locales.
+
+13
+00:00:42,138 --> 00:00:46,667
+Puntúa prioridad y audiencia, y recomienda salir, reforzar, esperar o descartar.
+
+14
+00:00:46,737 --> 00:00:49,981
+Cada decisión registra evidencia, señal principal y confianza.
+
+15
+00:00:50,051 --> 00:00:51,690
+Nunca crea hechos.
+
+16
+00:00:52,170 --> 00:00:53,829
+Seguí un club o un jugador.
+
+17
+00:00:53,899 --> 00:00:56,818
+El modelo eleva su relevancia y el overlay recibe un borde dorado.
+
+18
+00:00:56,888 --> 00:00:59,532
+La preferencia es local, explícita y sintética.
+
+19
+00:01:00,012 --> 00:01:01,706
+La separación es el valor.
+
+20
+00:01:01,776 --> 00:01:07,390
+MatchTruth aporta los hechos, BroadcastSync dirige la emisión y un único agente acotado ordena lo que merece atención.
+
+21
+00:01:07,460 --> 00:01:11,269
+La demo corre entera en el navegador, sin claves ni servicios pagos.
+
+22
+00:01:11,339 --> 00:01:16,378
+Azure OpenAI, GitHub Models y Azure Functions son integraciones opcionales, no requisitos de la demo.
+
+23
+00:01:16,858 --> 00:01:21,257
+Sigma Broadcast. Determinista, explicable y personalizable.
+
+24
+00:01:21,327 --> 00:01:23,701
+El partido, transmitido con inteligencia.

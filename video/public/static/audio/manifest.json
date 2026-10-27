@@ -1,0 +1,59 @@
+{
+  "demo": {
+    "file": "src/generated/demo.json",
+    "hash": "fb6feda95ddd48bc",
+    "files": [
+      "audio/demo/problem-1.wav",
+      "audio/demo/problem-2.wav",
+      "audio/demo/solution-1.wav",
+      "audio/demo/solution-2.wav",
+      "audio/demo/matchtruth-1.wav",
+      "audio/demo/matchtruth-2.wav",
+      "audio/demo/broadcastagent-1.wav",
+      "audio/demo/broadcastagent-2.wav",
+      "audio/demo/broadcastagent-3.wav",
+      "audio/demo/broadcastsync-1.wav",
+      "audio/demo/broadcastsync-2.wav",
+      "audio/demo/broadcastsync-3.wav",
+      "audio/demo/personalization-1.wav",
+      "audio/demo/personalization-2.wav",
+      "audio/demo/personalization-3.wav",
+      "audio/demo/correction-1.wav",
+      "audio/demo/correction-2.wav",
+      "audio/demo/recap-1.wav",
+      "audio/demo/recap-2.wav",
+      "audio/demo/close-1.wav",
+      "audio/demo/close-2.wav"
+    ]
+  },
+  "pitch": {
+    "file": "src/generated/pitch.json",
+    "hash": "76414473fc13158f",
+    "files": [
+      "audio/pitch/problem-1.wav",
+      "audio/pitch/problem-2.wav",
+      "audio/pitch/solution-1.wav",
+      "audio/pitch/solution-2.wav",
+      "audio/pitch/solution-3.wav",
+      "audio/pitch/matchtruth-1.wav",
+      "audio/pitch/matchtruth-2.wav",
+      "audio/pitch/matchtruth-3.wav",
+      "audio/pitch/broadcastsync-1.wav",
+      "audio/pitch/broadcastsync-2.wav",
+      "audio/pitch/broadcastsync-3.wav",
+      "audio/pitch/broadcastagent-1.wav",
+      "audio/pitch/broadcastagent-2.wav",
+      "audio/pitch/broadcastagent-3.wav",
+      "audio/pitch/broadcastagent-4.wav",
+      "audio/pitch/personalization-1.wav",
+      "audio/pitch/personalization-2.wav",
+      "audio/pitch/personalization-3.wav",
+      "audio/pitch/value-1.wav",
+      "audio/pitch/value-2.wav",
+      "audio/pitch/value-3.wav",
+      "audio/pitch/value-4.wav",
+      "audio/pitch/close-1.wav",
+      "audio/pitch/close-2.wav"
+    ]
+  }
+}

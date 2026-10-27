@@ -1,0 +1,83 @@
+1
+00:00:00,720 --> 00:00:02,922
+Las gráficas en vivo son rápidas.
+
+2
+00:00:02,992 --> 00:00:08,147
+Pero no siempre son correctas, casi nunca explican por qué aparecen y no se adaptan a quien está mirando.
+
+3
+00:00:08,627 --> 00:00:12,444
+Sigma Broadcast convierte un partido sintético en una transmisión 3D.
+
+4
+00:00:12,514 --> 00:00:15,946
+Cada gráfico nace de evidencia y cada decisión queda registrada.
+
+5
+00:00:16,426 --> 00:00:18,334
+MatchTruth es la fuente de verdad.
+
+6
+00:00:18,404 --> 00:00:23,254
+Reglas deterministas detectan patrones y atan cada insight a los eventos exactos que lo respaldan.
+
+7
+00:00:23,734 --> 00:00:28,021
+BroadcastAgent es un único agente acotado, apoyado en dos modelos locales.
+
+8
+00:00:28,091 --> 00:00:33,296
+Puntúa prioridad y audiencia, y recomienda salir, reforzar, esperar o descartar.
+
+9
+00:00:33,366 --> 00:00:38,865
+Cada decisión conserva evidencia, señal principal y confianza. Nunca inventa un hecho.
+
+10
+00:00:39,345 --> 00:00:42,249
+BroadcastSync dirige la emisión.
+
+11
+00:00:42,319 --> 00:00:45,992
+Prioriza, programa, expira y resuelve conflictos.
+
+12
+00:00:46,062 --> 00:00:50,354
+Con retardo de transmisión, descarta lo que ya no es válido antes de salir al aire.
+
+13
+00:00:50,834 --> 00:00:53,044
+La personalización es explícita.
+
+14
+00:00:53,114 --> 00:00:57,992
+Seguí un club o un jugador: el modelo eleva su relevancia y el overlay recibe un borde dorado.
+
+15
+00:00:58,062 --> 00:01:00,453
+Sin perfiles ocultos ni datos reales.
+
+16
+00:01:00,933 --> 00:01:06,025
+Cuando una corrección invalida un gol, el marcador y los gráficos dependientes se retiran de inmediato.
+
+17
+00:01:06,095 --> 00:01:08,141
+La evidencia manda sobre la IA.
+
+18
+00:01:08,621 --> 00:01:11,477
+Al final del partido se genera un resumen narrativo.
+
+19
+00:01:11,547 --> 00:01:16,868
+El JSON exportado conserva insights, decisiones, narrativas y timecodes para auditoría.
+
+20
+00:01:17,348 --> 00:01:20,486
+Determinista, explicable y personalizable.
+
+21
+00:01:20,556 --> 00:01:24,614
+Sigma Broadcast: el partido, transmitido con inteligencia.

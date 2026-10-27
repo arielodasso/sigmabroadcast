@@ -1,0 +1,12 @@
+{
+  "raw": "C:/Users/ariel/OneDrive/Escritorio/ARIEL/Sigma/Sigma Broadcast/video/public/captures/real/raw/page@3d0eb39f1ab9ebd180cd7838c6f65a53.webm",
+  "box": {
+    "x": 288,
+    "y": 162,
+    "width": 1344,
+    "height": 756
+  },
+  "trimStart": 4,
+  "trimLength": 12,
+  "output": "C:\\Users\\ariel\\OneDrive\\Escritorio\\ARIEL\\Sigma\\Sigma Broadcast\\video\\public\\captures\\real\\stage-live-en.mp4"
+}

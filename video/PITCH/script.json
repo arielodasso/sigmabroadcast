@@ -1,0 +1,226 @@
+{
+  "id": "PITCH",
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "spokenLocale": "en",
+  "voice": "Microsoft Zira Desktop",
+  "rate": 3,
+  "leadInMs": 500,
+  "tailMs": 1200,
+  "audioLeadMs": 220,
+  "scenePaddingMs": 320,
+  "sentenceGapMs": 130,
+  "scenes": [
+    {
+      "id": "problem",
+      "badgeKind": "real",
+      "badge": { "es": "PRODUCTO REAL · PANTALLA INICIAL", "en": "REAL PRODUCT · LANDING" },
+      "title": { "es": "El problema", "en": "The problem" },
+      "source": {
+        "es": "Captura real de la app · datos sintéticos",
+        "en": "Real app capture · synthetic data"
+      },
+      "visual": {
+        "type": "image",
+        "src": "captures/en/hero.png",
+        "fit": "cover"
+      },
+      "narration": {
+        "en": [
+          "Live football graphics are fast.",
+          "But they are not always right, they rarely explain themselves, and they do not adapt to who is watching."
+        ],
+        "es": [
+          "Las gráficas en vivo son rápidas.",
+          "Pero no siempre son correctas, casi nunca se explican y no se adaptan a quien está mirando."
+        ]
+      }
+    },
+    {
+      "id": "solution",
+      "badgeKind": "real",
+      "badge": { "es": "PRODUCTO REAL · PARTIDO EN VIVO", "en": "REAL PRODUCT · LIVE MATCH" },
+      "title": { "es": "La solución", "en": "The solution" },
+      "source": {
+        "es": "Interacción real: Play match · escena 3D y overlays",
+        "en": "Real interaction: Play match · 3D stage and overlays"
+      },
+      "visual": {
+        "type": "video",
+        "src": "captures/real/stage-live-en.mp4"
+      },
+      "narration": {
+        "en": [
+          "Sigma Broadcast turns a synthetic match into a 3D broadcast, built on synthetic data only.",
+          "Every graphic is backed by evidence and every decision is recorded.",
+          "The difference is separation: truth, direction and bounded AI."
+        ],
+        "es": [
+          "Sigma Broadcast convierte un partido sintético en una transmisión 3D, solo con datos sintéticos.",
+          "Cada gráfico nace de evidencia y cada decisión queda registrada.",
+          "La diferencia es la separación: verdad, dirección e IA acotada."
+        ]
+      }
+    },
+    {
+      "id": "matchtruth",
+      "badgeKind": "real",
+      "badge": { "es": "PRODUCTO REAL · PANEL", "en": "REAL PRODUCT · PANEL" },
+      "title": { "es": "MatchTruth", "en": "MatchTruth" },
+      "source": {
+        "es": "Panel real: insights, evidencia y estado del partido",
+        "en": "Real panel: insights, evidence and match state"
+      },
+      "visual": {
+        "type": "image",
+        "src": "captures/en/panel-grid.png",
+        "fit": "contain",
+        "panel": true
+      },
+      "narration": {
+        "en": [
+          "MatchTruth is the source of truth.",
+          "Deterministic detectors bind every insight to exact event IDs.",
+          "When a correction lands, anything that depends on invalid data is withdrawn."
+        ],
+        "es": [
+          "MatchTruth es la fuente de verdad.",
+          "Detectores deterministas atan cada insight a IDs de eventos exactos.",
+          "Cuando llega una corrección, todo lo que depende de datos inválidos se retira."
+        ]
+      }
+    },
+    {
+      "id": "broadcastsync",
+      "badgeKind": "real",
+      "badge": { "es": "PRODUCTO REAL · CONTROLES Y OVERLAY", "en": "REAL PRODUCT · CONTROLS AND OVERLAY" },
+      "title": { "es": "BroadcastSync", "en": "BroadcastSync" },
+      "source": {
+        "es": "Interacciones reales: retardo de transmisión y overlay en vivo",
+        "en": "Real interactions: broadcast delay and live overlay"
+      },
+      "visual": {
+        "type": "broadcast",
+        "stage": "captures/en/stage-goal.png",
+        "controls": "captures/en/controls-delay.png"
+      },
+      "narration": {
+        "en": [
+          "BroadcastSync is the director.",
+          "It prioritizes, schedules, expires and resolves conflicts, including broadcast delay.",
+          "Nothing stale reaches air."
+        ],
+        "es": [
+          "BroadcastSync es el director.",
+          "Prioriza, programa, expira y resuelve conflictos, incluido el retardo de transmisión.",
+          "Nada vencido llega al aire."
+        ]
+      }
+    },
+    {
+      "id": "broadcastagent",
+      "badgeKind": "real",
+      "badge": { "es": "PRODUCTO REAL · MODELO LOCAL, SIN API KEYS", "en": "REAL PRODUCT · ON-DEVICE, NO API KEYS" },
+      "title": { "es": "BroadcastAgent", "en": "BroadcastAgent" },
+      "source": {
+        "es": "Panel real: agente acotado, decisiones y confianza",
+        "en": "Real panel: bounded agent, decisions and confidence"
+      },
+      "visual": {
+        "type": "duo",
+        "left": "captures/en/panel-ai.png",
+        "right": "captures/en/panel-columns.png",
+        "leftLabel": { "es": "Módulo de IA", "en": "AI module" },
+        "rightLabel": { "es": "Decisiones y evidencia", "en": "Decisions and evidence" }
+      },
+      "narration": {
+        "en": [
+          "BroadcastAgent is one bounded agent, backed by two on-device models.",
+          "It scores priority and audience, then recommends air, boost, hold or suppress.",
+          "Every decision records the evidence, top signal and confidence.",
+          "It never creates facts."
+        ],
+        "es": [
+          "BroadcastAgent es un único agente acotado, apoyado en dos modelos locales.",
+          "Puntúa prioridad y audiencia, y recomienda salir, reforzar, esperar o descartar.",
+          "Cada decisión registra evidencia, señal principal y confianza.",
+          "Nunca crea hechos."
+        ]
+      }
+    },
+    {
+      "id": "personalization",
+      "badgeKind": "real",
+      "badge": { "es": "PRODUCTO REAL · BORDE DORADO", "en": "REAL PRODUCT · GOLD BORDER" },
+      "title": { "es": "Personalización", "en": "Personalization" },
+      "source": {
+        "es": "Overlay real con borde dorado al seguir un club",
+        "en": "Real overlay with a gold border when following a club"
+      },
+      "visual": {
+        "type": "personalization",
+        "overlay": "captures/en/overlay-goal.png",
+        "panel": "captures/en/panel-ai.png"
+      },
+      "narration": {
+        "en": [
+          "Follow a club or a player.",
+          "The model raises their relevance and the overlay gets a gold border.",
+          "Preferences stay local, explicit and synthetic."
+        ],
+        "es": [
+          "Seguí un club o un jugador.",
+          "El modelo eleva su relevancia y el overlay recibe un borde dorado.",
+          "La preferencia es local, explícita y sintética."
+        ]
+      }
+    },
+    {
+      "id": "value",
+      "badgeKind": "illustration",
+      "badge": { "es": "DIAGRAMA ILUSTRATIVO", "en": "ILLUSTRATIVE DIAGRAM" },
+      "title": { "es": "El valor diferencial", "en": "The difference" },
+      "source": {
+        "es": "Diagrama conceptual · no es una captura de pantalla",
+        "en": "Conceptual diagram · not a screenshot"
+      },
+      "visual": { "type": "diagram" },
+      "narration": {
+        "en": [
+          "The separation is the value.",
+          "MatchTruth supplies facts, BroadcastSync directs the airtime, and one bounded agent ranks what deserves attention.",
+          "The demo runs entirely in the browser, with no keys and no paid services.",
+          "Azure OpenAI, GitHub Models and Azure Functions are optional integrations, not requirements for the demo."
+        ],
+        "es": [
+          "La separación es el valor.",
+          "MatchTruth aporta los hechos, BroadcastSync dirige la emisión y un único agente acotado ordena lo que merece atención.",
+          "La demo corre entera en el navegador, sin claves ni servicios pagos.",
+          "Azure OpenAI, GitHub Models y Azure Functions son integraciones opcionales, no requisitos de la demo."
+        ]
+      }
+    },
+    {
+      "id": "close",
+      "badgeKind": "closing",
+      "badge": { "es": "CIERRE", "en": "CLOSING" },
+      "title": { "es": "Sigma Broadcast", "en": "Sigma Broadcast" },
+      "source": {
+        "es": "Partido sintético · ejecución local sin API keys",
+        "en": "Synthetic match · runs locally without API keys"
+      },
+      "visual": { "type": "title" },
+      "narration": {
+        "en": [
+          "Sigma Broadcast. Deterministic, explainable, personalizable.",
+          "The match, intelligently broadcast."
+        ],
+        "es": [
+          "Sigma Broadcast. Determinista, explicable y personalizable.",
+          "El partido, transmitido con inteligencia."
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,463 @@
+{
+  "id": "DEMO",
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "spokenLocale": "es",
+  "durationMs": 86074,
+  "durationInFrames": 2583,
+  "leadInMs": 500,
+  "tailMs": 1200,
+  "scenes": [
+    {
+      "id": "problem",
+      "startMs": 500,
+      "endMs": 8407,
+      "visual": {
+        "type": "image",
+        "src": "captures/es/hero.png",
+        "fit": "cover"
+      },
+      "badgeKind": "real",
+      "badge": {
+        "es": "PRODUCTO REAL · PANTALLA INICIAL",
+        "en": "REAL PRODUCT · LANDING"
+      },
+      "title": {
+        "es": "El problema",
+        "en": "The problem"
+      },
+      "source": {
+        "es": "Captura real de la app · partido y datos sintéticos",
+        "en": "Real app capture · synthetic match and data"
+      },
+      "sentences": [
+        {
+          "file": "audio/demo/problem-1.wav",
+          "startMs": 720,
+          "endMs": 2862,
+          "durationMs": 2142,
+          "text": {
+            "es": "Las gráficas en vivo son rápidas.",
+            "en": "Live football graphics are fast."
+          }
+        },
+        {
+          "file": "audio/demo/problem-2.wav",
+          "startMs": 2992,
+          "endMs": 8087,
+          "durationMs": 5095,
+          "text": {
+            "es": "Pero no siempre son correctas, casi nunca explican por qué aparecen y no se adaptan a quien está mirando.",
+            "en": "But they are not always right, they rarely explain why they appear, and they do not adapt to who is watching."
+          }
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "startMs": 8407,
+      "endMs": 16206,
+      "visual": {
+        "type": "video",
+        "src": "captures/real/stage-live-es.mp4"
+      },
+      "badgeKind": "real",
+      "badge": {
+        "es": "PRODUCTO REAL · PARTIDO EN VIVO",
+        "en": "REAL PRODUCT · LIVE MATCH"
+      },
+      "title": {
+        "es": "La solución",
+        "en": "The solution"
+      },
+      "source": {
+        "es": "Interacción real: Play match · escena 3D y overlays",
+        "en": "Real interaction: Play match · 3D stage and overlays"
+      },
+      "sentences": [
+        {
+          "file": "audio/demo/solution-1.wav",
+          "startMs": 8627,
+          "endMs": 12384,
+          "durationMs": 3757,
+          "text": {
+            "es": "Sigma Broadcast convierte un partido sintético en una transmisión 3D.",
+            "en": "Sigma Broadcast turns a synthetic match into a 3D broadcast."
+          }
+        },
+        {
+          "file": "audio/demo/solution-2.wav",
+          "startMs": 12514,
+          "endMs": 15886,
+          "durationMs": 3372,
+          "text": {
+            "es": "Cada gráfico nace de evidencia y cada decisión queda registrada.",
+            "en": "Every graphic is backed by evidence and every decision is recorded."
+          }
+        }
+      ]
+    },
+    {
+      "id": "matchtruth",
+      "startMs": 16206,
+      "endMs": 23514,
+      "visual": {
+        "type": "image",
+        "src": "captures/es/panel-grid.png",
+        "fit": "contain",
+        "panel": true
+      },
+      "badgeKind": "real",
+      "badge": {
+        "es": "PRODUCTO REAL · PANEL",
+        "en": "REAL PRODUCT · PANEL"
+      },
+      "title": {
+        "es": "MatchTruth",
+        "en": "MatchTruth"
+      },
+      "source": {
+        "es": "Panel real: insights, evidencia y estado del partido",
+        "en": "Real panel: insights, evidence and match state"
+      },
+      "sentences": [
+        {
+          "file": "audio/demo/matchtruth-1.wav",
+          "startMs": 16426,
+          "endMs": 18274,
+          "durationMs": 1848,
+          "text": {
+            "es": "MatchTruth es la fuente de verdad.",
+            "en": "MatchTruth is the source of truth."
+          }
+        },
+        {
+          "file": "audio/demo/matchtruth-2.wav",
+          "startMs": 18404,
+          "endMs": 23194,
+          "durationMs": 4790,
+          "text": {
+            "es": "Reglas deterministas detectan patrones y atan cada insight a los eventos exactos que lo respaldan.",
+            "en": "Deterministic rules detect patterns and bind every insight to the exact events behind it."
+          }
+        }
+      ]
+    },
+    {
+      "id": "broadcastagent",
+      "startMs": 23514,
+      "endMs": 39125,
+      "visual": {
+        "type": "duo",
+        "left": "captures/es/panel-ai.png",
+        "right": "captures/es/panel-columns.png",
+        "leftLabel": {
+          "es": "Módulo de IA",
+          "en": "AI module"
+        },
+        "rightLabel": {
+          "es": "Decisiones y evidencia",
+          "en": "Decisions and evidence"
+        }
+      },
+      "badgeKind": "real",
+      "badge": {
+        "es": "PRODUCTO REAL · MODELO LOCAL, SIN API KEYS",
+        "en": "REAL PRODUCT · ON-DEVICE, NO API KEYS"
+      },
+      "title": {
+        "es": "BroadcastAgent",
+        "en": "BroadcastAgent"
+      },
+      "source": {
+        "es": "Panel real: agente acotado, decisiones y confianza",
+        "en": "Real panel: bounded agent, decisions and confidence"
+      },
+      "sentences": [
+        {
+          "file": "audio/demo/broadcastagent-1.wav",
+          "startMs": 23734,
+          "endMs": 27961,
+          "durationMs": 4227,
+          "text": {
+            "es": "BroadcastAgent es un único agente acotado, apoyado en dos modelos locales.",
+            "en": "BroadcastAgent is one bounded agent backed by two on-device models."
+          }
+        },
+        {
+          "file": "audio/demo/broadcastagent-2.wav",
+          "startMs": 28091,
+          "endMs": 33236,
+          "durationMs": 5145,
+          "text": {
+            "es": "Puntúa prioridad y audiencia, y recomienda salir, reforzar, esperar o descartar.",
+            "en": "It scores priority and audience, then recommends air, boost, hold or suppress."
+          }
+        },
+        {
+          "file": "audio/demo/broadcastagent-3.wav",
+          "startMs": 33366,
+          "endMs": 38805,
+          "durationMs": 5439,
+          "text": {
+            "es": "Cada decisión conserva evidencia, señal principal y confianza. Nunca inventa un hecho.",
+            "en": "Every decision keeps its evidence, top signal and confidence. It never invents a fact."
+          }
+        }
+      ]
+    },
+    {
+      "id": "broadcastsync",
+      "startMs": 39125,
+      "endMs": 50614,
+      "visual": {
+        "type": "broadcast",
+        "stage": "captures/es/stage-goal.png",
+        "controls": "captures/es/controls-delay.png"
+      },
+      "badgeKind": "real",
+      "badge": {
+        "es": "PRODUCTO REAL · CONTROLES Y OVERLAY",
+        "en": "REAL PRODUCT · CONTROLS AND OVERLAY"
+      },
+      "title": {
+        "es": "BroadcastSync",
+        "en": "BroadcastSync"
+      },
+      "source": {
+        "es": "Interacciones reales: retardo de transmisión y overlay en vivo",
+        "en": "Real interactions: broadcast delay and live overlay"
+      },
+      "sentences": [
+        {
+          "file": "audio/demo/broadcastsync-1.wav",
+          "startMs": 39345,
+          "endMs": 42189,
+          "durationMs": 2844,
+          "text": {
+            "es": "BroadcastSync dirige la emisión.",
+            "en": "BroadcastSync directs the broadcast."
+          }
+        },
+        {
+          "file": "audio/demo/broadcastsync-2.wav",
+          "startMs": 42319,
+          "endMs": 45932,
+          "durationMs": 3613,
+          "text": {
+            "es": "Prioriza, programa, expira y resuelve conflictos.",
+            "en": "It prioritizes, schedules, expires and resolves conflicts."
+          }
+        },
+        {
+          "file": "audio/demo/broadcastsync-3.wav",
+          "startMs": 46062,
+          "endMs": 50294,
+          "durationMs": 4232,
+          "text": {
+            "es": "Con retardo de transmisión, descarta lo que ya no es válido antes de salir al aire.",
+            "en": "With broadcast delay, it discards anything no longer valid before it reaches air."
+          }
+        }
+      ]
+    },
+    {
+      "id": "personalization",
+      "startMs": 50614,
+      "endMs": 60713,
+      "visual": {
+        "type": "personalization",
+        "overlay": "captures/es/overlay-goal.png",
+        "panel": "captures/es/panel-ai.png"
+      },
+      "badgeKind": "real",
+      "badge": {
+        "es": "PRODUCTO REAL · BORDE DORADO",
+        "en": "REAL PRODUCT · GOLD BORDER"
+      },
+      "title": {
+        "es": "Personalización",
+        "en": "Personalization"
+      },
+      "source": {
+        "es": "Overlay real con borde dorado al seguir un club",
+        "en": "Real overlay with a gold border when following a club"
+      },
+      "sentences": [
+        {
+          "file": "audio/demo/personalization-1.wav",
+          "startMs": 50834,
+          "endMs": 52984,
+          "durationMs": 2150,
+          "text": {
+            "es": "La personalización es explícita.",
+            "en": "Personalization is explicit."
+          }
+        },
+        {
+          "file": "audio/demo/personalization-2.wav",
+          "startMs": 53114,
+          "endMs": 57932,
+          "durationMs": 4818,
+          "text": {
+            "es": "Seguí un club o un jugador: el modelo eleva su relevancia y el overlay recibe un borde dorado.",
+            "en": "Follow a club or a player: the model raises their relevance and the overlay gets a gold border."
+          }
+        },
+        {
+          "file": "audio/demo/personalization-3.wav",
+          "startMs": 58062,
+          "endMs": 60393,
+          "durationMs": 2331,
+          "text": {
+            "es": "Sin perfiles ocultos ni datos reales.",
+            "en": "No hidden profiles and no real data."
+          }
+        }
+      ]
+    },
+    {
+      "id": "correction",
+      "startMs": 60713,
+      "endMs": 68401,
+      "visual": {
+        "type": "duo",
+        "left": "captures/es/stage-correction.png",
+        "right": "captures/es/panel-corrections.png",
+        "leftLabel": {
+          "es": "Transmisión",
+          "en": "Broadcast"
+        },
+        "rightLabel": {
+          "es": "Corrección registrada",
+          "en": "Logged correction"
+        }
+      },
+      "badgeKind": "real",
+      "badge": {
+        "es": "PRODUCTO REAL · CORRECCIÓN",
+        "en": "REAL PRODUCT · CORRECTION"
+      },
+      "title": {
+        "es": "Corrección",
+        "en": "Correction"
+      },
+      "source": {
+        "es": "Evento real: gol anulado y overlays retirados",
+        "en": "Real event: disallowed goal and withdrawn overlays"
+      },
+      "sentences": [
+        {
+          "file": "audio/demo/correction-1.wav",
+          "startMs": 60933,
+          "endMs": 65965,
+          "durationMs": 5032,
+          "text": {
+            "es": "Cuando una corrección invalida un gol, el marcador y los gráficos dependientes se retiran de inmediato.",
+            "en": "When a correction invalidates a goal, the score and dependent graphics are withdrawn immediately."
+          }
+        },
+        {
+          "file": "audio/demo/correction-2.wav",
+          "startMs": 66095,
+          "endMs": 68081,
+          "durationMs": 1986,
+          "text": {
+            "es": "La evidencia manda sobre la IA.",
+            "en": "Evidence outranks AI."
+          }
+        }
+      ]
+    },
+    {
+      "id": "recap",
+      "startMs": 68401,
+      "endMs": 77128,
+      "visual": {
+        "type": "image",
+        "src": "captures/es/recap.png",
+        "fit": "contain",
+        "panel": true
+      },
+      "badgeKind": "real",
+      "badge": {
+        "es": "PRODUCTO REAL · RESUMEN FINAL",
+        "en": "REAL PRODUCT · FULL-TIME RECAP"
+      },
+      "title": {
+        "es": "Resumen y auditoría",
+        "en": "Recap and audit"
+      },
+      "source": {
+        "es": "Recap generado al alcanzar el final del partido",
+        "en": "Recap generated at full time"
+      },
+      "sentences": [
+        {
+          "file": "audio/demo/recap-1.wav",
+          "startMs": 68621,
+          "endMs": 71417,
+          "durationMs": 2796,
+          "text": {
+            "es": "Al final del partido se genera un resumen narrativo.",
+            "en": "At full time the system generates a narrative recap."
+          }
+        },
+        {
+          "file": "audio/demo/recap-2.wav",
+          "startMs": 71547,
+          "endMs": 76808,
+          "durationMs": 5261,
+          "text": {
+            "es": "El JSON exportado conserva insights, decisiones, narrativas y timecodes para auditoría.",
+            "en": "The exported JSON keeps insights, decisions, narratives and timecodes for audit."
+          }
+        }
+      ]
+    },
+    {
+      "id": "close",
+      "startMs": 77128,
+      "endMs": 84874,
+      "visual": {
+        "type": "title"
+      },
+      "badgeKind": "closing",
+      "badge": {
+        "es": "CIERRE",
+        "en": "CLOSING"
+      },
+      "title": {
+        "es": "Sigma Broadcast",
+        "en": "Sigma Broadcast"
+      },
+      "source": {
+        "es": "Partido sintético · ejecución local sin API keys",
+        "en": "Synthetic match · runs locally without API keys"
+      },
+      "sentences": [
+        {
+          "file": "audio/demo/close-1.wav",
+          "startMs": 77348,
+          "endMs": 80426,
+          "durationMs": 3078,
+          "text": {
+            "es": "Determinista, explicable y personalizable.",
+            "en": "Deterministic, explainable and personalizable."
+          }
+        },
+        {
+          "file": "audio/demo/close-2.wav",
+          "startMs": 80556,
+          "endMs": 84554,
+          "durationMs": 3998,
+          "text": {
+            "es": "Sigma Broadcast: el partido, transmitido con inteligencia.",
+            "en": "Sigma Broadcast: the match, intelligently broadcast."
+          }
+        }
+      ]
+    }
+  ]
+}

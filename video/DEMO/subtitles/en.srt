@@ -1,0 +1,83 @@
+1
+00:00:00,720 --> 00:00:02,922
+Live football graphics are fast.
+
+2
+00:00:02,992 --> 00:00:08,147
+But they are not always right, they rarely explain why they appear, and they do not adapt to who is watching.
+
+3
+00:00:08,627 --> 00:00:12,444
+Sigma Broadcast turns a synthetic match into a 3D broadcast.
+
+4
+00:00:12,514 --> 00:00:15,946
+Every graphic is backed by evidence and every decision is recorded.
+
+5
+00:00:16,426 --> 00:00:18,334
+MatchTruth is the source of truth.
+
+6
+00:00:18,404 --> 00:00:23,254
+Deterministic rules detect patterns and bind every insight to the exact events behind it.
+
+7
+00:00:23,734 --> 00:00:28,021
+BroadcastAgent is one bounded agent backed by two on-device models.
+
+8
+00:00:28,091 --> 00:00:33,296
+It scores priority and audience, then recommends air, boost, hold or suppress.
+
+9
+00:00:33,366 --> 00:00:38,865
+Every decision keeps its evidence, top signal and confidence. It never invents a fact.
+
+10
+00:00:39,345 --> 00:00:42,249
+BroadcastSync directs the broadcast.
+
+11
+00:00:42,319 --> 00:00:45,992
+It prioritizes, schedules, expires and resolves conflicts.
+
+12
+00:00:46,062 --> 00:00:50,354
+With broadcast delay, it discards anything no longer valid before it reaches air.
+
+13
+00:00:50,834 --> 00:00:53,044
+Personalization is explicit.
+
+14
+00:00:53,114 --> 00:00:57,992
+Follow a club or a player: the model raises their relevance and the overlay gets a gold border.
+
+15
+00:00:58,062 --> 00:01:00,453
+No hidden profiles and no real data.
+
+16
+00:01:00,933 --> 00:01:06,025
+When a correction invalidates a goal, the score and dependent graphics are withdrawn immediately.
+
+17
+00:01:06,095 --> 00:01:08,141
+Evidence outranks AI.
+
+18
+00:01:08,621 --> 00:01:11,477
+At full time the system generates a narrative recap.
+
+19
+00:01:11,547 --> 00:01:16,868
+The exported JSON keeps insights, decisions, narratives and timecodes for audit.
+
+20
+00:01:17,348 --> 00:01:20,486
+Deterministic, explainable and personalizable.
+
+21
+00:01:20,556 --> 00:01:24,614
+Sigma Broadcast: the match, intelligently broadcast.

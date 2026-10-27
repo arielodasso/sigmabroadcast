@@ -1,0 +1,95 @@
+1
+00:00:00,720 --> 00:00:02,709
+Live football graphics are fast.
+
+2
+00:00:02,779 --> 00:00:07,483
+But they are not always right, they rarely explain themselves, and they do not adapt to who is watching.
+
+3
+00:00:07,963 --> 00:00:12,707
+Sigma Broadcast turns a synthetic match into a 3D broadcast, built on synthetic data only.
+
+4
+00:00:12,777 --> 00:00:15,766
+Every graphic is backed by evidence and every decision is recorded.
+
+5
+00:00:15,836 --> 00:00:19,150
+The difference is separation: truth, direction and bounded AI.
+
+6
+00:00:19,630 --> 00:00:21,529
+MatchTruth is the source of truth.
+
+7
+00:00:21,599 --> 00:00:24,848
+Deterministic detectors bind every insight to exact event IDs.
+
+8
+00:00:24,918 --> 00:00:28,592
+When a correction lands, anything that depends on invalid data is withdrawn.
+
+9
+00:00:29,072 --> 00:00:30,876
+BroadcastSync is the director.
+
+10
+00:00:30,946 --> 00:00:36,105
+It prioritizes, schedules, expires and resolves conflicts, including broadcast delay.
+
+11
+00:00:36,175 --> 00:00:37,864
+Nothing stale reaches air.
+
+12
+00:00:38,344 --> 00:00:42,068
+BroadcastAgent is one bounded agent, backed by two on-device models.
+
+13
+00:00:42,138 --> 00:00:46,667
+It scores priority and audience, then recommends air, boost, hold or suppress.
+
+14
+00:00:46,737 --> 00:00:49,981
+Every decision records the evidence, top signal and confidence.
+
+15
+00:00:50,051 --> 00:00:51,690
+It never creates facts.
+
+16
+00:00:52,170 --> 00:00:53,829
+Follow a club or a player.
+
+17
+00:00:53,899 --> 00:00:56,818
+The model raises their relevance and the overlay gets a gold border.
+
+18
+00:00:56,888 --> 00:00:59,532
+Preferences stay local, explicit and synthetic.
+
+19
+00:01:00,012 --> 00:01:01,706
+The separation is the value.
+
+20
+00:01:01,776 --> 00:01:07,390
+MatchTruth supplies facts, BroadcastSync directs the airtime, and one bounded agent ranks what deserves attention.
+
+21
+00:01:07,460 --> 00:01:11,269
+The demo runs entirely in the browser, with no keys and no paid services.
+
+22
+00:01:11,339 --> 00:01:16,378
+Azure OpenAI, GitHub Models and Azure Functions are optional integrations, not requirements for the demo.
+
+23
+00:01:16,858 --> 00:01:21,257
+Sigma Broadcast. Deterministic, explainable, personalizable.
+
+24
+00:01:21,327 --> 00:01:23,701
+The match, intelligently broadcast.
